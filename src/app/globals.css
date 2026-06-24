@@ -1,26 +1,271 @@
+@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600;700&family=VT323&display=swap');
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
+@theme {
+  --font-retro: "VT323", "Courier New", monospace;
+  --font-mono: "IBM Plex Mono", "Courier New", monospace;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+@layer base {
+  body {
+    font-family: "IBM Plex Mono", "Courier New", monospace;
+    background-color: #000000;
+    color: #33ff00;
+    font-size: 15px;
+    line-height: 1.7;
+    letter-spacing: 0.01em;
   }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+/* CRT scanline */
+.crt-overlay {
+  pointer-events: none;
+  position: fixed;
+  inset: 0;
+  background: repeating-linear-gradient(
+    0deg,
+    rgba(0, 0, 0, 0.03) 0px,
+    rgba(0, 0, 0, 0.03) 1px,
+    transparent 1px,
+    transparent 3px
+  );
+  z-index: 9999;
+}
+
+.crt-vignette {
+  pointer-events: none;
+  position: fixed;
+  inset: 0;
+  background: radial-gradient(
+    ellipse at center,
+    transparent 60%,
+    rgba(0, 0, 0, 0.5) 100%
+  );
+  z-index: 9998;
+}
+
+/* Glows */
+.glow-green {
+  text-shadow: 0 0 4px #33ff00, 0 0 8px #33ff00, 0 0 16px rgba(51, 255, 0, 0.4);
+}
+
+.glow-green-subtle {
+  text-shadow: 0 0 3px rgba(51, 255, 0, 0.5);
+}
+
+/* Retro card */
+.retro-card {
+  background: #001a00;
+  border: 1px solid #1a4d00;
+  box-shadow: 0 0 6px rgba(51, 255, 0, 0.08);
+  transition: all 0.2s ease;
+}
+
+.retro-card:hover {
+  border-color: #33ff00;
+  box-shadow: 0 0 15px rgba(51, 255, 0, 0.2);
+}
+
+/* Buttons */
+.retro-btn {
+  background: transparent;
+  border: 1px solid #33ff00;
+  color: #33ff00;
+  padding: 8px 16px;
+  font-family: "IBM Plex Mono", monospace;
+  font-size: 13px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  letter-spacing: 0.5px;
+}
+
+.retro-btn:hover {
+  background: rgba(51, 255, 0, 0.1);
+  box-shadow: 0 0 10px rgba(51, 255, 0, 0.3);
+  text-shadow: 0 0 4px #33ff00;
+}
+
+.retro-btn-highlight {
+  border-color: #66ff33;
+  color: #66ff33;
+}
+
+.retro-btn-highlight:hover {
+  background: rgba(102, 255, 51, 0.1);
+  box-shadow: 0 0 12px rgba(102, 255, 51, 0.3);
+}
+
+/* Choice buttons */
+.choice-btn {
+  background: #001100;
+  border: 1px solid #1a4d00;
+  color: #33ff00;
+  padding: 14px 18px;
+  font-family: "IBM Plex Mono", monospace;
+  font-size: 14px;
+  text-align: left;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  width: 100%;
+  line-height: 1.6;
+}
+
+.choice-btn:hover:not(.disabled) {
+  border-color: #33ff00;
+  background: rgba(51, 255, 0, 0.05);
+  text-shadow: 0 0 2px rgba(51, 255, 0, 0.5);
+}
+
+.choice-btn.correct {
+  border-color: #33ff00;
+  color: #66ff33;
+  background: rgba(51, 255, 0, 0.12);
+  text-shadow: 0 0 3px rgba(51, 255, 0, 0.5);
+}
+
+.choice-btn.wrong {
+  border-color: #ff3300;
+  color: #ff3300;
+  background: rgba(255, 51, 0, 0.08);
+  text-shadow: 0 0 3px rgba(255, 51, 0, 0.3);
+}
+
+.choice-btn.disabled {
+  pointer-events: none;
+}
+
+/* Animations */
+.blink {
+  animation: blink-animation 1s steps(2, start) infinite;
+}
+
+@keyframes blink-animation {
+  to { opacity: 0; }
+}
+
+.flicker {
+  animation: flicker-anim 4s infinite;
+}
+
+@keyframes flicker-anim {
+  0%, 19.999%, 22%, 62.999%, 64%, 64.999%, 70%, 100% { opacity: 1; }
+  20%, 21.999%, 63%, 63.999%, 65%, 69.999% { opacity: 0.88; }
+}
+
+/* XP bar */
+.xp-bar-track {
+  height: 10px;
+  background: #001a00;
+  border: 1px solid #1a4d00;
+  border-radius: 2px;
+  overflow: hidden;
+}
+
+.xp-bar-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #1a8c00, #33ff00, #66ff33);
+  box-shadow: 0 0 8px #33ff00;
+  transition: width 0.5s ease;
+  border-radius: 2px;
+}
+
+/* Progress bar */
+.progress-bar-retro {
+  height: 8px;
+  background: #001a00;
+  border: 1px solid #1a4d00;
+}
+
+.progress-fill-retro {
+  height: 100%;
+  background: #33ff00;
+  box-shadow: 0 0 6px #33ff00;
+  transition: width 0.3s ease;
+}
+
+/* Streak animation */
+@keyframes streak-pulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.15); }
+}
+
+.streak-pulse {
+  animation: streak-pulse 0.6s ease;
+}
+
+/* Score pop animation */
+@keyframes score-pop {
+  0% { transform: scale(0.5); opacity: 0; }
+  60% { transform: scale(1.2); opacity: 1; }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+.score-pop {
+  animation: score-pop 0.5s ease-out;
+}
+
+/* Correct flash */
+@keyframes correct-flash {
+  0% { box-shadow: 0 0 0 rgba(51,255,0,0); }
+  50% { box-shadow: 0 0 30px rgba(51,255,0,0.5); }
+  100% { box-shadow: 0 0 0 rgba(51,255,0,0); }
+}
+
+.correct-flash {
+  animation: correct-flash 0.6s ease;
+}
+
+/* Wrong shake */
+@keyframes wrong-shake {
+  0%, 100% { transform: translateX(0); }
+  20% { transform: translateX(-4px); }
+  40% { transform: translateX(4px); }
+  60% { transform: translateX(-3px); }
+  80% { transform: translateX(3px); }
+}
+
+.wrong-shake {
+  animation: wrong-shake 0.4s ease;
+}
+
+/* Level badge glow */
+@keyframes badge-glow {
+  0%, 100% { box-shadow: 0 0 5px rgba(51,255,0,0.3); }
+  50% { box-shadow: 0 0 15px rgba(51,255,0,0.6), 0 0 30px rgba(51,255,0,0.2); }
+}
+
+.badge-glow {
+  animation: badge-glow 2s ease-in-out infinite;
+}
+
+/* Combo text */
+@keyframes combo-appear {
+  0% { transform: translateY(10px) scale(0.8); opacity: 0; }
+  100% { transform: translateY(0) scale(1); opacity: 1; }
+}
+
+.combo-appear {
+  animation: combo-appear 0.3s ease-out;
+}
+
+/* Stars */
+@keyframes star-spin {
+  0% { transform: rotate(0deg) scale(0); opacity: 0; }
+  50% { transform: rotate(180deg) scale(1.2); opacity: 1; }
+  100% { transform: rotate(360deg) scale(1); opacity: 1; }
+}
+
+.star-spin {
+  animation: star-spin 0.6s ease-out;
+}
+
+/* Scrollbar */
+::-webkit-scrollbar { width: 8px; }
+::-webkit-scrollbar-track { background: #000000; }
+::-webkit-scrollbar-thumb { background: #1a4d00; }
+::-webkit-scrollbar-thumb:hover { background: #33ff00; }
+
+::selection {
+  background: #33ff00;
+  color: #000000;
 }
