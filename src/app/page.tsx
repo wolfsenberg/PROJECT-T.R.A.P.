@@ -1,264 +1,237 @@
 "use client";
 
+import { useState, useRef } from "react";
 import Link from "next/link";
 import { quizTopics } from "@/data";
-import { iconMap, BookIcon, CheckIcon, XIcon } from "@/components/Icons";
+import { iconMap, CheckIcon, XIcon } from "@/components/Icons";
 import { useGame } from "@/context/GameContext";
+import XPTaskbar from "@/components/XPTaskbar";
+
+function BookIcon({ className = "w-4 h-4" }: { className?: string }) {
+  return (
+    <svg className={className} viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.5">
+      <path d="M2 12.5A1.5 1.5 0 0 1 3.5 11H13" />
+      <path d="M3.5 1H13v14H3.5A1.5 1.5 0 0 1 2 13.5V2.5A1.5 1.5 0 0 1 3.5 1z" />
+    </svg>
+  );
+}
 
 export default function Home() {
-  const { state, isTopicLocked, getTopicResult, getCompletedCount, resetAll } = useGame();
-  const completedCount = getCompletedCount();
-  const totalTopics = 7;
-  const progressPct = (completedCount / totalTopics) * 100;
+  const { state, isTopicSubmitted, getTopicProgress, getCompletedCount, getAnsweredCount, resetTopic, resetAll } = useGame();
+  const done = getCompletedCount();
+  const progressPct = Math.round((done / 7) * 100);
+
+  // 7-tap reset: tap a topic row 7 times quickly to reset it
+  const tapCountRef = useRef<Record<string, { count: number; timer: ReturnType<typeof setTimeout> | null }>>({});
+
+  const handleTopicTap = (topicId: string) => {
+    const entry = tapCountRef.current[topicId] || { count: 0, timer: null };
+
+    // Clear previous timeout
+    if (entry.timer) clearTimeout(entry.timer);
+
+    entry.count += 1;
+
+    if (entry.count >= 7) {
+      // Reset this topic
+      resetTopic(topicId);
+      entry.count = 0;
+      entry.timer = null;
+    } else {
+      // Reset counter after 2 seconds of no taps
+      entry.timer = setTimeout(() => {
+        entry.count = 0;
+      }, 2000);
+    }
+
+    tapCountRef.current[topicId] = entry;
+  };
 
   return (
-    <main className="min-h-screen p-5 md:p-10 max-w-5xl mx-auto">
-      {/* Header */}
-      <header className="text-center mb-8 pt-6">
-        <div className="inline-block border border-[#1a4d00] px-4 py-1 text-xs text-[#1a8c00] mb-3 tracking-[0.2em]">
-          POLYTECHNIC UNIVERSITY OF THE PHILIPPINES
-        </div>
-        <h1 className="text-3xl md:text-5xl font-bold glow-green tracking-tight flicker font-[VT323]">
-          CCIS COMPREHENSIVE EXAM
-        </h1>
-        <p className="text-[#33ff00] mt-2 text-lg md:text-xl tracking-wide glow-green-subtle font-[VT323]">
-          MOCK TEST REVIEWER
-        </p>
-        <p className="text-[#1a8c00] mt-3 text-sm">
-          Part I: Written Exam // 100 Questions Per Topic // 7 Subjects // 700 Total Items
-        </p>
-      </header>
-
-      {/* Overall Progress Panel */}
-      <section className="retro-card p-5 mb-6 border-[#33ff00]">
-        <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
-          <div>
-            <p className="text-xs text-[#1a8c00] tracking-wider mb-1">EXAM PROGRESS</p>
-            <p className="text-[#33ff00] text-lg font-[VT323]">
-              {completedCount} / {totalTopics} TOPICS COMPLETED
-            </p>
-          </div>
-
-          <div className="flex-1 md:max-w-sm">
-            <div className="xp-bar-track">
-              <div className="xp-bar-fill" style={{ width: `${progressPct}%` }} />
+    <div className="xp-desktop">
+      {/* Main content area */}
+      <div className="flex-1 flex items-center justify-center p-2 sm:p-4 md:p-8">
+        <div className="xp-window w-full max-w-3xl">
+          {/* Title Bar */}
+          <div className="xp-titlebar">
+            <svg className="xp-titlebar-icon text-white" viewBox="0 0 16 16" fill="currentColor">
+              <path d="M2 2h12v12H2V2zm1 2v8h10V4H3zm1 1h8v1H4V5zm0 2h8v1H4V7zm0 2h5v1H4V9z"/>
+            </svg>
+            <span className="xp-titlebar-text">
+              PUP CCIS Mock Test Reviewer
+            </span>
+            <div className="xp-titlebar-buttons">
+              <div className="xp-titlebar-btn xp-btn-minimize">
+                <svg viewBox="0 0 10 10" className="w-[9px] h-[9px]"><rect x="1" y="7" width="8" height="2" fill="white"/></svg>
+              </div>
+              <div className="xp-titlebar-btn xp-btn-maximize">
+                <svg viewBox="0 0 10 10" className="w-[9px] h-[9px]"><rect x="1" y="1" width="8" height="8" fill="none" stroke="white" strokeWidth="2"/></svg>
+              </div>
+              <div className="xp-titlebar-btn xp-btn-close">
+                <svg viewBox="0 0 10 10" className="w-[9px] h-[9px]"><path d="M2 2L8 8M8 2L2 8" stroke="white" strokeWidth="2"/></svg>
+              </div>
             </div>
-            <p className="text-[10px] text-[#1a8c00] mt-1 text-right">
-              {Math.round(progressPct)}%
-            </p>
           </div>
 
-          <div className="text-right">
-            <p className="text-xs text-[#1a8c00]">PASSING RATE</p>
-            <p className="text-[#33ff00] font-bold text-sm">75% REQUIRED</p>
-          </div>
-        </div>
-
-        {/* Instructions */}
-        {!state.allCompleted && completedCount === 0 && (
-          <div className="mt-4 border-t border-[#1a4d00] pt-4">
-            <p className="text-xs text-[#1a8c00] leading-relaxed">
-              {"> "}Complete all 7 topics to see your overall score. Each topic can only be taken once per attempt.
-              After completing all topics, you can restart for another attempt.
-            </p>
-          </div>
-        )}
-      </section>
-
-      {/* Results Panel (shown when all topics complete) */}
-      {state.allCompleted && (
-        <section className={`retro-card p-6 mb-6 border-[${state.overallPassed ? "#33ff00" : "#ff3300"}]`}>
-          <div className="text-center">
-            <h2 className="text-2xl font-[VT323] glow-green mb-4">
-              {state.overallPassed ? "EXAMINATION PASSED" : "EXAMINATION FAILED"}
-            </h2>
-            <div className={`inline-block border-2 ${state.overallPassed ? "border-[#33ff00]" : "border-[#ff3300]"} rounded-full w-32 h-32 flex items-center justify-center mx-auto mb-4`}
-              style={{ boxShadow: `0 0 20px ${state.overallPassed ? "rgba(51,255,0,0.3)" : "rgba(255,51,0,0.3)"}` }}>
-              <div className="text-center">
-                <p className={`text-3xl font-bold font-[VT323] ${state.overallPassed ? "text-[#33ff00]" : "text-[#ff3300]"}`}>
-                  {Math.round((state.overallScore / state.overallTotal) * 100)}%
-                </p>
-                <p className="text-[10px] text-[#1a8c00]">
-                  {state.overallScore}/{state.overallTotal}
-                </p>
+          {/* Window Body */}
+          <div className="xp-body">
+            {/* Info Section */}
+            <div className="xp-infobox mb-4">
+              <svg className="w-5 h-5 flex-shrink-0" viewBox="0 0 20 20" fill="#0054e3">
+                <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd"/>
+              </svg>
+              <div className="text-[12px] text-[#000000]">
+                <p className="font-bold mb-1">Part I: Written Examination</p>
+                <p>7 Topics, 700 Total Items — 75% Passing Score (525 correct answers required)</p>
               </div>
             </div>
 
-            <p className="text-sm text-[#1a8c00] mb-6">
-              {state.overallPassed
-                ? "Congratulations! You scored above the 75% passing rate."
-                : "You did not reach the 75% passing rate. Review the topics and try again."}
-            </p>
+            {/* Progress Bar */}
+            <div className="mb-5">
+              <div className="flex justify-between text-[12px] text-[#000000] mb-2">
+                <span>{done}/7 topics completed</span>
+                <span className="font-bold">{progressPct}%</span>
+              </div>
+              <div className="xp-progress">
+                <div className="xp-progress-fill" style={{ width: `${progressPct}%` }} />
+              </div>
+            </div>
 
-            <button onClick={resetAll} className="retro-btn retro-btn-highlight">
-              RESTART EXAM (NEW ATTEMPT)
-            </button>
-          </div>
-        </section>
-      )}
-
-      {/* Topic Grid */}
-      <section className="mb-4">
-        <h2 className="text-xs text-[#1a8c00] mb-3 tracking-wider">
-          // SELECT TOPIC:
-        </h2>
-      </section>
-      <section className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-10">
-        {quizTopics.map((topic) => {
-          const IconComponent = iconMap[topic.icon];
-          const locked = isTopicLocked(topic.id);
-          const result = getTopicResult(topic.id);
-          const scorePct = result ? Math.round((result.score / result.total) * 100) : null;
-          const passed = scorePct !== null && scorePct >= 75;
-
-          return (
-            <div
-              key={topic.id}
-              className={`retro-card p-5 relative overflow-hidden ${
-                locked ? "opacity-60" : "group"
-              } ${locked && passed ? "border-[#1a4d00]" : ""}`}
-            >
-              {/* Status badge */}
-              {locked && (
-                <div className={`absolute top-3 right-3 flex items-center gap-1 border px-2 py-0.5 text-[10px] tracking-wider ${
-                  passed ? "border-[#33ff00] text-[#33ff00]" : "border-[#ff3300] text-[#ff3300]"
-                }`}>
-                  {passed ? <CheckIcon className="w-3 h-3" /> : <XIcon className="w-3 h-3" />}
-                  {scorePct}%
+            {/* Results Panel (only when all done) */}
+            {state.allCompleted && (
+              <div className="border border-[#7f9db9] rounded bg-white p-4 mb-3">
+                <div className="text-center mb-3">
+                  <p className="text-[24px] font-bold" style={{ color: state.overallPassed ? "#006100" : "#9c0006" }}>
+                    {Math.round((state.overallScore / state.overallTotal) * 100)}%
+                  </p>
+                  <div className="flex items-center justify-center gap-1">
+                    {state.overallPassed ? (
+                      <CheckIcon className="w-4 h-4 text-[#006100]" />
+                    ) : (
+                      <XIcon className="w-4 h-4 text-[#9c0006]" />
+                    )}
+                    <span className="text-[12px] font-bold" style={{ color: state.overallPassed ? "#006100" : "#9c0006" }}>
+                      {state.overallPassed ? "PASSED" : "FAILED"}
+                    </span>
+                  </div>
+                  <p className="text-[11px] text-[#444444] mt-1">
+                    {state.overallScore}/{state.overallTotal} correct answers
+                  </p>
                 </div>
-              )}
 
-              <div className="flex items-center gap-3 mb-3">
-                {IconComponent && (
-                  <IconComponent className={`w-7 h-7 ${locked ? "text-[#1a4d00]" : "text-[#1a8c00] group-hover:text-[#33ff00]"} transition-colors`} />
-                )}
-                <h3 className={`text-sm font-bold ${locked ? "text-[#1a4d00]" : "text-[#33ff00] group-hover:text-[#66ff33]"} glow-green-subtle`}>
-                  {topic.title}
-                </h3>
+                {/* Per-topic breakdown */}
+                <div className="border-t border-[#aca899] pt-2 mb-3">
+                  {quizTopics.map((t) => {
+                    const progress = getTopicProgress(t.id);
+                    if (!progress || !progress.submitted) return null;
+                    const p = Math.round((progress.score / progress.total) * 100);
+                    return (
+                      <div key={t.id} className="flex justify-between text-[11px] py-0.5">
+                        <span>{t.title}</span>
+                        <span className="font-bold" style={{ color: p >= 75 ? "#006100" : "#9c0006" }}>
+                          {progress.score}/{progress.total} ({p}%)
+                        </span>
+                      </div>
+                    );
+                  })}
+                </div>
+
+                <div className="text-center border-t border-[#aca899] pt-3">
+                  <button onClick={resetAll} className="xp-button-primary cursor-pointer">
+                    Restart Exam
+                  </button>
+                </div>
               </div>
-              <p className="text-[#1a8c00] text-xs leading-relaxed mb-4">
-                {topic.description}
-              </p>
+            )}
 
-              <div className="flex items-center justify-between">
-                <span className="text-[#1a8c00] text-[10px] border border-[#1a4d00] px-2 py-0.5 tracking-wider">
-                  100 ITEMS
-                </span>
-
-                {locked ? (
-                  <span className="text-[10px] text-[#1a4d00]">COMPLETED</span>
-                ) : state.allCompleted ? (
-                  <span className="text-[10px] text-[#1a4d00]">RESTART TO RETAKE</span>
-                ) : (
-                  <Link
-                    href={`/quiz/${topic.id}`}
-                    className="text-xs text-[#1a4d00] group-hover:text-[#33ff00] transition-colors"
-                  >
-                    {"> "}START
-                  </Link>
-                )}
+            {/* Topic ListView */}
+            <div className="xp-listview mb-4">
+              <div className="xp-listview-header" style={{ gridTemplateColumns: "40px 1fr 65px 80px 80px" }}>
+                <div>#</div>
+                <div>Topic</div>
+                <div>Items</div>
+                <div>Status</div>
+                <div>Action</div>
               </div>
+              {quizTopics.map((topic, i) => {
+                const submitted = isTopicSubmitted(topic.id);
+                const progress = getTopicProgress(topic.id);
+                const answeredCount = getAnsweredCount(topic.id);
+                const score = progress?.submitted ? Math.round((progress.score / progress.total) * 100) : null;
+                const IconComponent = iconMap[topic.icon];
+                const inProgress = !submitted && answeredCount > 0;
 
-              {/* Score bar if completed */}
-              {scorePct !== null && (
-                <div className="mt-3 xp-bar-track">
+                return (
                   <div
-                    className="xp-bar-fill"
-                    style={{
-                      width: `${scorePct}%`,
-                      background: passed
-                        ? "linear-gradient(90deg, #1a8c00, #33ff00)"
-                        : "linear-gradient(90deg, #8c1a00, #ff3300)",
-                    }}
-                  />
-                </div>
-              )}
-
-              {/* Make the whole card clickable if not locked */}
-              {!locked && !state.allCompleted && (
-                <Link
-                  href={`/quiz/${topic.id}`}
-                  className="absolute inset-0"
-                  aria-label={`Start ${topic.title}`}
-                />
-              )}
+                    key={topic.id}
+                    className="xp-listview-row"
+                    style={{ gridTemplateColumns: "40px 1fr 65px 80px 80px" }}
+                    onClick={() => handleTopicTap(topic.id)}
+                  >
+                    <div className="text-[12px]">{i + 1}</div>
+                    <div>
+                      {IconComponent && <IconComponent className="w-4 h-4 text-[#0054e3]" />}
+                      <span className="text-[12px] truncate font-bold">{topic.title}</span>
+                    </div>
+                    <div className="text-[12px]">{topic.questions.length}</div>
+                    <div>
+                      {submitted ? (
+                        <span className="flex items-center gap-1 text-[11px] font-bold" style={{ color: score !== null && score >= 75 ? "#006100" : "#9c0006" }}>
+                          {score !== null && score >= 75 ? (
+                            <CheckIcon className="w-3.5 h-3.5" />
+                          ) : (
+                            <XIcon className="w-3.5 h-3.5" />
+                          )}
+                          {score}%
+                        </span>
+                      ) : inProgress ? (
+                        <span className="text-[11px] text-[#0054e3] font-bold">{answeredCount}/100</span>
+                      ) : (
+                        <span className="text-[11px] text-[#808080]">Pending</span>
+                      )}
+                    </div>
+                    <div>
+                      {!submitted && !state.allCompleted ? (
+                        <Link href={`/quiz/${topic.id}`} className="xp-button text-[11px] px-3 py-1 no-underline">
+                          {inProgress ? "Resume" : "Start"}
+                        </Link>
+                      ) : submitted ? (
+                        <span className="flex items-center gap-1 text-[11px] text-[#006100]">
+                          <CheckIcon className="w-3.5 h-3.5" />
+                          Done
+                        </span>
+                      ) : null}
+                    </div>
+                  </div>
+                );
+              })}
             </div>
-          );
-        })}
-      </section>
 
-      {/* Per-topic breakdown (when all complete) */}
-      {state.allCompleted && (
-        <section className="retro-card p-5 mb-8">
-          <h3 className="text-sm font-bold text-[#33ff00] mb-4 glow-green-subtle">
-            // SCORE BREAKDOWN
-          </h3>
-          <div className="space-y-2">
-            {quizTopics.map((topic) => {
-              const result = getTopicResult(topic.id);
-              if (!result) return null;
-              const pct = Math.round((result.score / result.total) * 100);
-              const passed = pct >= 75;
-              return (
-                <div key={topic.id} className="flex items-center justify-between text-sm">
-                  <span className="text-[#1a8c00]">{topic.title}</span>
-                  <span className={passed ? "text-[#33ff00]" : "text-[#ff3300]"}>
-                    {result.score}/{result.total} ({pct}%)
-                  </span>
-                </div>
-              );
-            })}
-            <div className="border-t border-[#1a4d00] pt-2 mt-2 flex items-center justify-between text-sm font-bold">
-              <span className="text-[#33ff00]">OVERALL</span>
-              <span className={state.overallPassed ? "text-[#33ff00]" : "text-[#ff3300]"}>
-                {state.overallScore}/{state.overallTotal} ({Math.round((state.overallScore / state.overallTotal) * 100)}%)
-              </span>
-            </div>
-          </div>
-        </section>
-      )}
-
-      {/* Previous Attempts */}
-      {state.attempts.length > 0 && (
-        <section className="retro-card p-5 mb-8">
-          <h3 className="text-xs font-bold text-[#1a8c00] mb-3 tracking-wider">
-            // ATTEMPT HISTORY
-          </h3>
-          <div className="space-y-2">
-            {state.attempts.map((attempt, idx) => (
-              <div key={idx} className="flex items-center justify-between text-xs">
-                <span className="text-[#1a8c00]">Attempt #{idx + 1} — {attempt.date}</span>
-                <span className={attempt.passed ? "text-[#33ff00]" : "text-[#ff3300]"}>
-                  {attempt.score}/{attempt.total} ({Math.round((attempt.score / attempt.total) * 100)}%) — {attempt.passed ? "PASSED" : "FAILED"}
-                </span>
+            {/* Attempt History */}
+            {state.attempts.length > 0 && (
+              <div className="border border-[#7f9db9] rounded bg-white p-3">
+                <p className="text-[11px] font-bold mb-2">Attempt History</p>
+                {state.attempts.map((a, i) => (
+                  <div key={i} className="flex justify-between text-[11px] py-1 border-b border-[#f0f0f0] last:border-0">
+                    <span className="text-[#444444]">Attempt #{i + 1} — {a.date}</span>
+                    <span className="flex items-center gap-1 font-bold" style={{ color: a.passed ? "#006100" : "#9c0006" }}>
+                      {a.passed ? (
+                        <CheckIcon className="w-3 h-3" />
+                      ) : (
+                        <XIcon className="w-3 h-3" />
+                      )}
+                      {Math.round((a.score / a.total) * 100)}% — {a.passed ? "Passed" : "Failed"}
+                    </span>
+                  </div>
+                ))}
               </div>
-            ))}
+            )}
           </div>
-        </section>
-      )}
-
-      {/* References */}
-      <section className="retro-card p-5 mb-8">
-        <div className="flex items-center gap-2 mb-3">
-          <BookIcon className="w-4 h-4 text-[#1a8c00]" />
-          <h3 className="text-xs font-bold text-[#1a8c00] tracking-wider">
-            PUP CCIS REFERENCE MATERIALS
-          </h3>
         </div>
-        <div className="space-y-2 text-xs text-[#0a4d00]">
-          <p><span className="text-[#1a8c00]">COMP 20013</span> — Peter Norton&apos;s Introduction to Computers (6th Ed, McGraw-Hill)</p>
-          <p><span className="text-[#1a8c00]">CMPE 30052</span> — DSA by Austria, Dastas, Dela Fuente &amp; Sagum (PUP CCIS 2021); Lafore; CLRS</p>
-          <p><span className="text-[#1a8c00]">OS</span> — Operating System Concepts by Silberschatz, Galvin &amp; Gagne (10th Ed)</p>
-          <p><span className="text-[#1a8c00]">COMP 20043</span> — Discrete Structures by Asst. Prof. Fernandez (PUP); Rosen (8th Ed)</p>
-          <p><span className="text-[#1a8c00]">NETWORKING</span> — Data Communications &amp; Networking by Forouzan (5th Ed)</p>
-          <p><span className="text-[#1a8c00]">COMP 20163</span> — Web Development by Novida (PUP CCIS); Robbins; Duckett</p>
-          <p><span className="text-[#1a8c00]">COMP 20143</span> — HCI: Sharp, Rogers &amp; Preece (5th Ed); Nielsen&apos;s 10 Heuristics</p>
-        </div>
-      </section>
+      </div>
 
-      <footer className="text-center text-[#0a3300] text-xs pb-8">
-        <p>// PUP CCIS COMPREHENSIVE EXAM MOCK TEST // FOR REVIEW PURPOSES ONLY //</p>
-      </footer>
-    </main>
+      {/* XP Taskbar */}
+      <XPTaskbar />
+    </div>
   );
 }

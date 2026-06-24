@@ -2,31 +2,33 @@
 
 import { createContext, useContext, useState, useEffect, ReactNode } from "react";
 
-interface TopicResult {
-  score: number;
-  total: number;
-  completed: boolean;
+interface TopicProgress {
+  answers: (number | null)[];       // user's answers (null = unanswered)
+  questions: number[];              // shuffled question indices (to keep order consistent on return)
+  submitted: boolean;               // true = locked/done
+  score: number;                    // correct count (only meaningful when submitted)
+  total: number;                    // total questions
 }
 
 interface GameState {
-  // Track each topic's result
-  topicResults: Record<string, TopicResult>;
-  // Whether all 7 topics have been completed in this attempt
+  topics: Record<string, TopicProgress>;
   allCompleted: boolean;
-  // Overall score once all are done
   overallScore: number;
   overallTotal: number;
   overallPassed: boolean;
-  // Historical attempts
   attempts: { date: string; score: number; total: number; passed: boolean }[];
 }
 
 interface GameContextType {
   state: GameState;
-  isTopicLocked: (topicId: string) => boolean;
-  completeQuiz: (topicId: string, score: number, total: number) => void;
-  getTopicResult: (topicId: string) => TopicResult | null;
+  getTopicProgress: (topicId: string) => TopicProgress | null;
+  isTopicSubmitted: (topicId: string) => boolean;
+  startOrResumeTopic: (topicId: string, totalQuestions: number) => TopicProgress;
+  saveAnswer: (topicId: string, questionIndex: number, answer: number) => void;
+  submitTopic: (topicId: string, score: number) => void;
   getCompletedCount: () => number;
+  getAnsweredCount: (topicId: string) => number;
+  resetTopic: (topicId: string) => void;
   resetAll: () => void;
 }
 
@@ -34,7 +36,7 @@ const TOTAL_TOPICS = 7;
 const PASSING_RATE = 0.75;
 
 const defaultState: GameState = {
-  topicResults: {},
+  topics: {},
   allCompleted: false,
   overallScore: 0,
   overallTotal: 0,
@@ -49,56 +51,94 @@ export function GameProvider({ children }: { children: ReactNode }) {
   const [loaded, setLoaded] = useState(false);
 
   useEffect(() => {
-    const saved = localStorage.getItem("ccis-exam-state");
+    const saved = localStorage.getItem("ccis-exam-state-v2");
     if (saved) {
-      try {
-        setState(JSON.parse(saved));
-      } catch {
-        // ignore parse errors
-      }
+      try { setState(JSON.parse(saved)); } catch { /* ignore */ }
     }
     setLoaded(true);
   }, []);
 
   useEffect(() => {
     if (loaded) {
-      localStorage.setItem("ccis-exam-state", JSON.stringify(state));
+      localStorage.setItem("ccis-exam-state-v2", JSON.stringify(state));
     }
   }, [state, loaded]);
 
-  const isTopicLocked = (topicId: string): boolean => {
-    // A topic is locked if it's already been completed in this attempt
-    // (user can't retake until all topics are done and they restart)
-    return !!state.topicResults[topicId]?.completed;
+  const getTopicProgress = (topicId: string): TopicProgress | null => {
+    return state.topics[topicId] || null;
   };
 
-  const getTopicResult = (topicId: string): TopicResult | null => {
-    return state.topicResults[topicId] || null;
+  const isTopicSubmitted = (topicId: string): boolean => {
+    return !!state.topics[topicId]?.submitted;
   };
 
-  const getCompletedCount = (): number => {
-    return Object.values(state.topicResults).filter((r) => r.completed).length;
+  const startOrResumeTopic = (topicId: string, totalQuestions: number): TopicProgress => {
+    const existing = state.topics[topicId];
+    if (existing) return existing;
+
+    // Create shuffled indices for this topic
+    const indices = Array.from({ length: totalQuestions }, (_, i) => i);
+    for (let i = indices.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [indices[i], indices[j]] = [indices[j], indices[i]];
+    }
+
+    const newProgress: TopicProgress = {
+      answers: new Array(totalQuestions).fill(null),
+      questions: indices,
+      submitted: false,
+      score: 0,
+      total: totalQuestions,
+    };
+
+    setState((prev) => ({
+      ...prev,
+      topics: { ...prev.topics, [topicId]: newProgress },
+    }));
+
+    return newProgress;
   };
 
-  const completeQuiz = (topicId: string, score: number, total: number) => {
+  const saveAnswer = (topicId: string, questionIndex: number, answer: number) => {
     setState((prev) => {
-      const newResults = {
-        ...prev.topicResults,
-        [topicId]: { score, total, completed: true },
+      const topic = prev.topics[topicId];
+      if (!topic || topic.submitted) return prev;
+      const newAnswers = [...topic.answers];
+      newAnswers[questionIndex] = answer;
+      return {
+        ...prev,
+        topics: {
+          ...prev.topics,
+          [topicId]: { ...topic, answers: newAnswers },
+        },
+      };
+    });
+  };
+
+  const submitTopic = (topicId: string, score: number) => {
+    setState((prev) => {
+      const topic = prev.topics[topicId];
+      if (!topic || topic.submitted) return prev;
+
+      const newTopics = {
+        ...prev.topics,
+        [topicId]: { ...topic, submitted: true, score },
       };
 
-      const completedCount = Object.values(newResults).filter((r) => r.completed).length;
+      const completedCount = Object.values(newTopics).filter((t) => t.submitted).length;
       const allDone = completedCount >= TOTAL_TOPICS;
 
-      let overallScore = prev.overallScore;
-      let overallTotal = prev.overallTotal;
-      let overallPassed = prev.overallPassed;
+      let overallScore = 0;
+      let overallTotal = 0;
+      let overallPassed = false;
       let attempts = prev.attempts;
 
       if (allDone) {
-        overallScore = Object.values(newResults).reduce((sum, r) => sum + r.score, 0);
-        overallTotal = Object.values(newResults).reduce((sum, r) => sum + r.total, 0);
-        overallPassed = overallScore / overallTotal >= PASSING_RATE;
+        Object.values(newTopics).forEach((t) => {
+          overallScore += t.score;
+          overallTotal += t.total;
+        });
+        overallPassed = overallTotal > 0 && overallScore / overallTotal >= PASSING_RATE;
         attempts = [
           ...prev.attempts,
           {
@@ -112,7 +152,7 @@ export function GameProvider({ children }: { children: ReactNode }) {
 
       return {
         ...prev,
-        topicResults: newResults,
+        topics: newTopics,
         allCompleted: allDone,
         overallScore,
         overallTotal,
@@ -122,10 +162,40 @@ export function GameProvider({ children }: { children: ReactNode }) {
     });
   };
 
+  const getCompletedCount = (): number => {
+    return Object.values(state.topics).filter((t) => t.submitted).length;
+  };
+
+  const getAnsweredCount = (topicId: string): number => {
+    const topic = state.topics[topicId];
+    if (!topic) return 0;
+    return topic.answers.filter((a) => a !== null).length;
+  };
+
+  const resetTopic = (topicId: string) => {
+    setState((prev) => {
+      const newTopics = { ...prev.topics };
+      delete newTopics[topicId];
+
+      // Recalculate allCompleted
+      const completedCount = Object.values(newTopics).filter((t) => t.submitted).length;
+
+      return {
+        ...prev,
+        topics: newTopics,
+        allCompleted: completedCount >= TOTAL_TOPICS,
+        // Reset overall if it was completed before
+        overallScore: completedCount >= TOTAL_TOPICS ? prev.overallScore : 0,
+        overallTotal: completedCount >= TOTAL_TOPICS ? prev.overallTotal : 0,
+        overallPassed: completedCount >= TOTAL_TOPICS ? prev.overallPassed : false,
+      };
+    });
+  };
+
   const resetAll = () => {
     setState((prev) => ({
       ...defaultState,
-      attempts: prev.attempts, // keep history
+      attempts: prev.attempts,
     }));
   };
 
@@ -133,10 +203,14 @@ export function GameProvider({ children }: { children: ReactNode }) {
     <GameContext.Provider
       value={{
         state,
-        isTopicLocked,
-        completeQuiz,
-        getTopicResult,
+        getTopicProgress,
+        isTopicSubmitted,
+        startOrResumeTopic,
+        saveAnswer,
+        submitTopic,
         getCompletedCount,
+        getAnsweredCount,
+        resetTopic,
         resetAll,
       }}
     >

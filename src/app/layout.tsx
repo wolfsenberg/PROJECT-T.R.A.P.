@@ -3,9 +3,8 @@ import "./globals.css";
 import { GameProvider } from "@/context/GameContext";
 
 export const metadata: Metadata = {
-  title: "PUP CCIS Comprehensive Exam - Mock Test",
-  description:
-    "Gamified mock test reviewer for PUP College of Computer and Information Sciences comprehensive exam",
+  title: "PUP CCIS Mock Test Reviewer",
+  description: "PUP CCIS Mock Test Reviewer",
 };
 
 export default function RootLayout({
@@ -15,9 +14,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className="min-h-screen bg-black text-[#33ff00] antialiased">
-        <div className="crt-overlay" />
-        <div className="crt-vignette" />
+      <body>
         <GameProvider>{children}</GameProvider>
       </body>
     </html>
