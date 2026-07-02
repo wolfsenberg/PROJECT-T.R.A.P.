@@ -1,41 +1,52 @@
-# PROJECT T.R.A.P.
+# T.R.A.P.
 
-**T**otal **R**eview **A**ssessment **P**rogram
+**Total Review Assessment Project**
 
-A classified assessment system. 700 items across 7 sectors.
+Also known as:
 
-## Stack
+**To Review And Pass**
 
-- Next.js 16 (App Router)
-- TypeScript
-- Tailwind CSS v4
+Seven sectors.  
+Seven hundred items.  
+One quiet system built for one thing: clearance.
 
-## Getting Started
+The rules are simple.
+
+- Enter a sector.
+- Answer what is asked.
+- Submit when certain.
+- Move forward.
+- Reach the threshold.
+
+No noise. No spectacle. Just the review, the score, and the attempt.
+
+## Signal
+
+```text
+T.R.A.P.
+Total Review Assessment Project
+To Review And Pass
+
+7 sectors
+700 items
+75% clearance
+local attempt memory
+```
+
+## Access
 
 ```bash
 npm install
 npm run dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000).
+Then open:
 
-## Structure
-
-```
-src/
-├── app/          # Routes
-├── components/   # UI components
-├── context/      # State management
-└── data/         # Assessment items (7 sectors × 100 items)
+```text
+http://localhost:3000
 ```
 
-## Rules
+## Note
 
-- All sectors must be completed before results are revealed.
-- Each sector is locked once submitted.
-- 75% clearance required.
-- Attempt history is preserved locally.
-
-## Notes
-
-Do not distribute. Internal use only.
+This project is a reviewer and assessment tool.  
+The questions are meant for preparation, not prediction.
