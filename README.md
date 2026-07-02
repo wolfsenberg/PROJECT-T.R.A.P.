@@ -1,52 +1,46 @@
 # T.R.A.P.
 
-**Total Review Assessment Project**
-
-Also known as:
-
-**To Review And Pass**
+```text
+TOTAL REVIEW ASSESSMENT PROJECT
+TO REVIEW AND PASS
+```
 
 Seven sectors.  
-Seven hundred items.  
-One quiet system built for one thing: clearance.
+Seven hundred signals.  
+One threshold.
 
-The rules are simple.
+This is not a library.  
+This is not a dashboard.  
+This is a quiet checkpoint.
 
-- Enter a sector.
-- Answer what is asked.
-- Submit when certain.
-- Move forward.
-- Reach the threshold.
+You enter.
+You answer.
+You submit.
+You learn what still follows you.
 
-No noise. No spectacle. Just the review, the score, and the attempt.
-
-## Signal
-
-```text
-T.R.A.P.
-Total Review Assessment Project
-To Review And Pass
-
-7 sectors
-700 items
-75% clearance
-local attempt memory
-```
-
-## Access
-
-```bash
-npm install
-npm run dev
-```
-
-Then open:
+## Clearance
 
 ```text
-http://localhost:3000
+SECTORS     07
+ITEMS       700
+MARK        75%
+MEMORY      LOCAL
+MODE        REVIEW / ASSESSMENT
 ```
 
-## Note
+## Doctrine
 
-This project is a reviewer and assessment tool.  
-The questions are meant for preparation, not prediction.
+The system does not predict the gate.
+
+It sharpens the one approaching it.
+
+## Archive
+
+Built for the long review sessions, the late-night resets, the last-minute walks, and the questions that keep circling back.
+
+T.R.A.P. exists for one reason:
+
+```text
+TO REVIEW.
+AND PASS.
+```
