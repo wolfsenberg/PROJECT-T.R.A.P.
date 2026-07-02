@@ -8,15 +8,6 @@ import { useGame } from "@/context/GameContext";
 import { ArrowLeftIcon, CheckIcon, XIcon, InfoIcon } from "@/components/Icons";
 import XPTaskbar from "@/components/XPTaskbar";
 
-function BookIcon({ className = "w-4 h-4" }: { className?: string }) {
-  return (
-    <svg className={className} viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.5">
-      <path d="M2 12.5A1.5 1.5 0 0 1 3.5 11H13" />
-      <path d="M3.5 1H13v14H3.5A1.5 1.5 0 0 1 2 13.5V2.5A1.5 1.5 0 0 1 3.5 1z" />
-    </svg>
-  );
-}
-
 export default function QuizPage() {
   const params = useParams();
   const router = useRouter();
@@ -59,7 +50,7 @@ export default function QuizPage() {
     if (liveProgress && view === "quiz") {
       const firstUnanswered = liveProgress.answers.findIndex((a) => a === null);
       if (firstUnanswered !== -1 && firstUnanswered > 0) {
-        setIdx(firstUnanswered);
+        queueMicrotask(() => setIdx(firstUnanswered));
       }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -79,7 +70,7 @@ export default function QuizPage() {
   if (!topic) {
     return (
       <div className="xp-desktop">
-        <div className="flex-1 flex items-center justify-center p-4 pb-12">
+        <div className="flex-1 flex items-start sm:items-center justify-center p-2 sm:p-4 pb-14">
           <div className="xp-window w-80">
             <div className="xp-titlebar">
               <span className="xp-titlebar-text">Error</span>
@@ -103,11 +94,11 @@ export default function QuizPage() {
     const passed = pct >= 75;
     return (
       <div className="xp-desktop">
-        <div className="flex-1 flex items-center justify-center p-4 pb-12">
+        <div className="flex-1 flex items-start sm:items-center justify-center p-2 sm:p-4 pb-14">
           <div className="xp-window w-full max-w-lg">
             <div className="xp-titlebar">
               <svg className="xp-titlebar-icon text-white" viewBox="0 0 16 16" fill="currentColor"><path d="M2 2h12v12H2V2zm1 2v8h10V4H3zm1 1h8v1H4V5zm0 2h8v1H4V7zm0 2h5v1H4V9z"/></svg>
-              <span className="xp-titlebar-text">Results — {topic.title}</span>
+              <span className="xp-titlebar-text">Results - {topic.title}</span>
               <div className="xp-titlebar-buttons">
                 <div className="xp-titlebar-btn xp-btn-close" onClick={() => router.push("/")}><svg viewBox="0 0 10 10" className="w-[9px] h-[9px]"><path d="M2 2L8 8M8 2L2 8" stroke="white" strokeWidth="2"/></svg></div>
               </div>
@@ -155,11 +146,11 @@ export default function QuizPage() {
     const letters = ["A", "B", "C", "D"];
     return (
       <div className="xp-desktop">
-        <div className="flex-1 flex items-start justify-center p-4 pb-12 overflow-auto">
+        <div className="flex-1 flex items-start justify-center p-2 sm:p-4 pb-14 overflow-auto">
           <div className="xp-window w-full max-w-2xl">
             <div className="xp-titlebar">
               <svg className="xp-titlebar-icon text-white" viewBox="0 0 16 16" fill="currentColor"><path d="M2 2h12v12H2V2zm1 2v8h10V4H3zm1 1h8v1H4V5zm0 2h8v1H4V7zm0 2h5v1H4V9z"/></svg>
-              <span className="xp-titlebar-text">Review — {topic.title}</span>
+              <span className="xp-titlebar-text">Review - {topic.title}</span>
               <div className="xp-titlebar-buttons">
                 <div className="xp-titlebar-btn xp-btn-close" onClick={() => router.push("/")}><svg viewBox="0 0 10 10" className="w-[9px] h-[9px]"><path d="M2 2L8 8M8 2L2 8" stroke="white" strokeWidth="2"/></svg></div>
               </div>
@@ -223,7 +214,7 @@ export default function QuizPage() {
 
   return (
     <div className="xp-desktop">
-      <div className="flex-1 flex items-center justify-center p-4 pb-12">
+      <div className="flex-1 flex items-start sm:items-center justify-center p-2 sm:p-4 pb-14">
         <div className="xp-window w-full max-w-2xl">
           <div className="xp-titlebar">
             <svg className="xp-titlebar-icon text-white" viewBox="0 0 16 16" fill="currentColor"><path d="M2 2h12v12H2V2zm1 2v8h10V4H3zm1 1h8v1H4V5zm0 2h8v1H4V7zm0 2h5v1H4V9z"/></svg>
@@ -262,7 +253,7 @@ export default function QuizPage() {
 
             {/* Question */}
             <div className="border border-[#aca899] rounded bg-[#fafafa] p-3 mb-3">
-              <p className="text-[13px] font-bold text-[#000] leading-relaxed">{q?.question}</p>
+              <p className="text-[14px] sm:text-[13px] font-bold text-[#000] leading-relaxed">{q?.question}</p>
             </div>
 
             {/* Choices */}
@@ -303,7 +294,7 @@ export default function QuizPage() {
             )}
 
             {/* Nav */}
-            <div className="flex items-center justify-between pt-2 border-t border-[#aca899]">
+            <div className="xp-quiz-nav flex items-center justify-between pt-2 border-t border-[#aca899]">
               <button onClick={() => setIdx(idx - 1)} disabled={idx === 0} className="xp-button cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed">Previous</button>
               {idx < questions.length - 1 ? (
                 <button onClick={() => setIdx(idx + 1)} className="xp-button cursor-pointer">Next</button>

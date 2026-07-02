@@ -1,20 +1,11 @@
 "use client";
 
-import { useState, useRef } from "react";
+import { useRef } from "react";
 import Link from "next/link";
 import { quizTopics } from "@/data";
 import { iconMap, CheckIcon, XIcon } from "@/components/Icons";
 import { useGame } from "@/context/GameContext";
 import XPTaskbar from "@/components/XPTaskbar";
-
-function BookIcon({ className = "w-4 h-4" }: { className?: string }) {
-  return (
-    <svg className={className} viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.5">
-      <path d="M2 12.5A1.5 1.5 0 0 1 3.5 11H13" />
-      <path d="M3.5 1H13v14H3.5A1.5 1.5 0 0 1 2 13.5V2.5A1.5 1.5 0 0 1 3.5 1z" />
-    </svg>
-  );
-}
 
 export default function Home() {
   const { state, isTopicSubmitted, getTopicProgress, getCompletedCount, getAnsweredCount, resetTopic, resetAll } = useGame();
@@ -50,7 +41,7 @@ export default function Home() {
   return (
     <div className="xp-desktop">
       {/* Main content area */}
-      <div className="flex-1 flex items-center justify-center p-2 sm:p-4 md:p-8">
+      <div className="flex-1 flex items-start sm:items-center justify-center p-2 sm:p-4 md:p-8">
         <div className="xp-window w-full max-w-3xl">
           {/* Title Bar */}
           <div className="xp-titlebar">
@@ -82,7 +73,7 @@ export default function Home() {
               </svg>
               <div className="text-[12px] text-[#000000]">
                 <p className="font-bold mb-1">Part I: Written Examination</p>
-                <p>7 Topics, 700 Total Items — 75% Passing Score (525 correct answers required)</p>
+                <p>7 Topics, 700 Total Items - 75% Passing Score (525 correct answers required)</p>
               </div>
             </div>
 
@@ -213,14 +204,14 @@ export default function Home() {
                 <p className="text-[11px] font-bold mb-2">Attempt History</p>
                 {state.attempts.map((a, i) => (
                   <div key={i} className="flex justify-between text-[11px] py-1 border-b border-[#f0f0f0] last:border-0">
-                    <span className="text-[#444444]">Attempt #{i + 1} — {a.date}</span>
+                    <span className="text-[#444444]">Attempt #{i + 1} - {a.date}</span>
                     <span className="flex items-center gap-1 font-bold" style={{ color: a.passed ? "#006100" : "#9c0006" }}>
                       {a.passed ? (
                         <CheckIcon className="w-3 h-3" />
                       ) : (
                         <XIcon className="w-3 h-3" />
                       )}
-                      {Math.round((a.score / a.total) * 100)}% — {a.passed ? "Passed" : "Failed"}
+                      {Math.round((a.score / a.total) * 100)}% - {a.passed ? "Passed" : "Failed"}
                     </span>
                   </div>
                 ))}

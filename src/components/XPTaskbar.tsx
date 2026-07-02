@@ -64,11 +64,11 @@ export default function XPTaskbar() {
       {startOpen && (
         <div
           ref={menuRef}
-          className="fixed bottom-[36px] left-0 z-[1000]"
+          className="xp-start-menu fixed bottom-[36px] left-0 z-[1000]"
           style={{ width: 320 }}
         >
           <div
-            className="overflow-hidden"
+            className="xp-start-menu-content overflow-hidden"
             style={{
               border: "2px solid",
               borderTopColor: "#ffffff",
@@ -96,7 +96,7 @@ export default function XPTaskbar() {
             </div>
 
             {/* Body — two columns */}
-            <div className="flex">
+            <div className="xp-start-menu-body flex">
               {/* Left: Topics */}
               <div className="flex-1 bg-white py-1">
                 <p className="px-3 py-1 text-[10px] text-[#808080] font-bold border-b border-[#ece9d8]">
@@ -160,7 +160,7 @@ export default function XPTaskbar() {
               </div>
 
               {/* Right: Progress info */}
-              <div className="w-[110px] bg-[#d3e5fa] py-2 px-2 border-l border-[#7f9db9]">
+              <div className="xp-start-menu-side w-[110px] bg-[#d3e5fa] py-2 px-2 border-l border-[#7f9db9]">
                 <p className="text-[10px] font-bold text-[#003c74] mb-2">Progress</p>
 
                 <div className="space-y-2">

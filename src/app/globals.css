@@ -14,6 +14,7 @@
     font-size: 11px;
     margin: 0;
     padding: 0;
+    overflow-x: hidden;
     -webkit-font-smoothing: auto;
   }
 
@@ -53,18 +54,41 @@
 /* === XP DESKTOP === */
 .xp-desktop {
   min-height: 100vh;
+  min-height: 100dvh;
   background: linear-gradient(180deg, #245edc 0%, #3a6ea5 50%, #245edc 100%);
   display: flex;
   flex-direction: column;
   font-family: "Tahoma", "Segoe UI", sans-serif;
-  padding-bottom: 36px;
+  padding-bottom: calc(36px + env(safe-area-inset-bottom));
 }
 
 @media (max-width: 560px) {
-  .xp-desktop { padding-bottom: 32px; }
-  .xp-window { border-radius: 0; box-shadow: 0 2px 8px rgba(0,0,0,0.3); }
-  .xp-titlebar { border-radius: 0; }
-  .xp-body { padding: 12px; }
+  .xp-desktop {
+    padding-bottom: calc(40px + env(safe-area-inset-bottom));
+  }
+
+  .xp-window {
+    border-radius: 0;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+  }
+
+  .xp-titlebar {
+    border-radius: 0;
+    min-height: 36px;
+  }
+
+  .xp-titlebar-text {
+    font-size: 12px;
+  }
+
+  .xp-titlebar-btn {
+    width: 24px;
+    height: 24px;
+  }
+
+  .xp-body {
+    padding: 12px;
+  }
 }
 
 /* === XP WINDOW === */
@@ -168,6 +192,19 @@
   gap: 8px;
 }
 
+@media (max-width: 560px) {
+  .xp-toolbar {
+    align-items: stretch;
+    gap: 6px;
+    padding: 8px;
+    flex-wrap: wrap;
+  }
+
+  .xp-toolbar .xp-button {
+    min-height: 36px;
+  }
+}
+
 /* === XP BUTTON === */
 .xp-button {
   background: linear-gradient(180deg, #ffffff 0%, #ece9d8 80%, #e3dcd2 100%);
@@ -208,6 +245,15 @@
 
 .xp-button-primary:hover {
   border-color: #0050d0;
+}
+
+@media (max-width: 560px) {
+  .xp-button,
+  .xp-button-primary {
+    min-height: 40px;
+    padding: 8px 14px;
+    font-size: 12px;
+  }
 }
 
 /* === XP PROGRESS BAR === */
@@ -314,16 +360,20 @@
   .xp-listview-row > div:nth-child(5) .xp-button {
     width: 100%;
     text-align: center;
+    min-height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
   }
 }
 
 /* === XP TASKBAR === */
 .xp-taskbar {
   background: linear-gradient(180deg, #3a6ea5 0%, #1f3f7a 100%);
-  height: 36px;
+  height: calc(36px + env(safe-area-inset-bottom));
   display: flex;
   align-items: center;
-  padding: 2px 4px;
+  padding: 2px 4px calc(2px + env(safe-area-inset-bottom));
   position: fixed;
   bottom: 0;
   left: 0;
@@ -333,7 +383,10 @@
 }
 
 @media (max-width: 560px) {
-  .xp-taskbar { height: 32px; padding: 2px 2px; }
+  .xp-taskbar {
+    height: calc(40px + env(safe-area-inset-bottom));
+    padding: 4px 4px calc(4px + env(safe-area-inset-bottom));
+  }
 }
 
 .xp-start-button {
@@ -351,6 +404,17 @@
   font-weight: bold;
   font-style: italic;
   text-shadow: 0 1px 1px rgba(0, 0, 0, 0.4);
+}
+
+@media (max-width: 560px) {
+  .xp-start-button {
+    height: 32px;
+    padding: 2px 10px 2px 6px;
+  }
+
+  .xp-clock {
+    padding: 0 8px;
+  }
 }
 
 .xp-start-button:hover {
@@ -412,6 +476,7 @@
   display: flex;
   align-items: center;
   gap: 8px;
+  line-height: 1.35;
   transition: background-color 0.1s;
 }
 
@@ -441,4 +506,85 @@
   background: #f0f0f0 !important;
   border-color: #aca899 !important;
   color: #808080 !important;
+}
+
+@media (max-width: 560px) {
+  .xp-choice {
+    min-height: 56px;
+    padding: 12px;
+    align-items: flex-start;
+    gap: 10px;
+    font-size: 13px;
+  }
+
+  .xp-choice > span:nth-child(2) {
+    font-size: 13px;
+    overflow-wrap: anywhere;
+  }
+
+  .xp-choice > span:first-child {
+    width: 26px;
+    height: 26px;
+    font-size: 12px;
+  }
+
+  .xp-body p {
+    overflow-wrap: anywhere;
+  }
+
+  .xp-quiz-nav {
+    position: sticky;
+    bottom: -12px;
+    z-index: 5;
+    margin: 8px -12px -12px;
+    padding: 10px 12px;
+    background: #ffffff;
+    box-shadow: 0 -1px 0 #aca899;
+  }
+
+  .xp-quiz-nav .xp-button,
+  .xp-quiz-nav .xp-button-primary {
+    min-width: 112px;
+  }
+
+  .xp-infobox {
+    padding: 12px;
+  }
+
+  .xp-infobox p {
+    font-size: 12px;
+    line-height: 1.45;
+  }
+
+  .xp-statusbar {
+    min-height: 32px;
+    font-size: 12px;
+  }
+
+  .xp-start-menu {
+    left: 6px;
+    right: 6px;
+    bottom: calc(40px + env(safe-area-inset-bottom));
+    width: auto !important;
+  }
+
+  .xp-start-menu-content {
+    max-height: min(72dvh, 560px);
+    overflow-y: auto;
+  }
+
+  .xp-start-menu-body {
+    display: block;
+  }
+
+  .xp-start-menu-side {
+    display: none;
+  }
+
+  .xp-start-menu a {
+    min-height: 42px;
+    padding-top: 9px;
+    padding-bottom: 9px;
+    font-size: 12px;
+  }
 }

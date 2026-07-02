@@ -204,10 +204,10 @@ export const discreteStructuresQuestions: Question[] = [
     explanation: "Circular permutations of n objects = (n-1)! = (6-1)! = 5! = 120."
   },
   {
-    question: "How many different necklaces can be made by arranging 5 distinct beads in a circle (rotations considered identical)?",
+    question: "How many circular arrangements can be made with 5 distinct beads if rotations are considered identical but reflections are considered different?",
     choices: ["120", "24", "60", "12"],
     answer: 1,
-    explanation: "Circular permutations of n objects = (n-1)! = 4! = 24. (If reflections also identical, it would be 4!/2 = 12.)"
+    explanation: "Circular permutations of n distinct objects, when rotations are considered identical and reflections are considered different, equal (n-1)! = 4! = 24. If reflections were also identical, the answer would be 4!/2 = 12."
   },
   {
     question: "How many distinguishable permutations are there of the letters in COMMITTEE?",

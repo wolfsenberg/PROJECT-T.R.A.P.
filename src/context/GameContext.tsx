@@ -51,11 +51,13 @@ export function GameProvider({ children }: { children: ReactNode }) {
   const [loaded, setLoaded] = useState(false);
 
   useEffect(() => {
-    const saved = localStorage.getItem("ccis-exam-state-v2");
-    if (saved) {
-      try { setState(JSON.parse(saved)); } catch { /* ignore */ }
-    }
-    setLoaded(true);
+    queueMicrotask(() => {
+      const saved = localStorage.getItem("ccis-exam-state-v2");
+      if (saved) {
+        try { setState(JSON.parse(saved)); } catch { /* ignore */ }
+      }
+      setLoaded(true);
+    });
   }, []);
 
   useEffect(() => {
