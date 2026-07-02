@@ -448,10 +448,10 @@ export const dataStructuresQuestions: Question[] = [
     explanation: "Quick Sort degrades to O(n²) when the pivot is always the smallest or largest element, creating highly unbalanced partitions."
   },
   {
-    question: "What is the space complexity of Quick Sort?",
+    question: "What is the average-case auxiliary space complexity of Quick Sort?",
     choices: ["O(n)", "O(n²)", "O(log n)", "O(1)"],
     answer: 2,
-    explanation: "Quick Sort requires O(log n) space for the recursive call stack in the average case. Worst case stack depth is O(n)."
+    explanation: "Quick Sort requires O(log n) auxiliary space for the recursive call stack in the average case. Worst-case stack depth is O(n) when partitions are highly unbalanced."
   },
   {
     question: "Is Quick Sort a stable sorting algorithm?",

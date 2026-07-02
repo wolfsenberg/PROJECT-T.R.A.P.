@@ -132,7 +132,7 @@ export const operatingSystemsQuestions: Question[] = [
       "The size of the instruction set"
     ],
     answer: 1,
-    explanation: "Word size is the number of bits that the CPU can process simultaneously in one operation (e.g., 32-bit or 64-bit). It determines the width of registers, data bus, and the range of memory addresses."
+    explanation: "Word size is the number of bits that the CPU can process simultaneously in one operation (e.g., 32-bit or 64-bit). It typically matches the width of general-purpose registers and influences data handling; addressable memory also depends on the CPU's address width."
   },
   {
     question: "Which register type is used to hold the memory address of data operands?",
@@ -872,7 +872,7 @@ export const operatingSystemsQuestions: Question[] = [
       "208 cylinders",
       "299 cylinders"
     ],
-    answer: 2,
+    answer: 1,
     explanation: "SSTF from 53: nearest is 65(12), then 67(2), then 37(30), then 14(23), then 98(84), then 122(24), then 124(2), then 183(59). Total = 12+2+30+23+84+24+2+59 = 236 cylinders."
   },
   {
@@ -971,8 +971,8 @@ export const operatingSystemsQuestions: Question[] = [
       "7 page faults",
       "9 page faults"
     ],
-    answer: 1,
-    explanation: "FIFO with 3 frames: 7(fault,[7]), 0(fault,[7,0]), 1(fault,[7,0,1]), 2(fault,replace 7→[2,0,1]), 0(hit), 3(fault,replace 0→[2,3,1]), 0(fault,replace 1→[2,3,0]), 4(fault,replace 2→[4,3,0]), 2(fault,replace 3→[4,2,0]), 3(fault,replace 0→[4,2,3]). Wait—let me recount: actually with strict FIFO queue order it's 6 faults. Frames after each access: [7],[7,0],[7,0,1],[2,0,1],[2,0,1],[2,0,3],[2,0,3]... The correct count is 6 page faults."
+    answer: 3,
+    explanation: "FIFO with 3 frames: 7(F,[7]), 0(F,[7,0]), 1(F,[7,0,1]), 2(F,replace 7→[2,0,1]), 0(H), 3(F,replace 0→[2,3,1]), 0(F,replace 1→[2,3,0]), 4(F,replace 2→[4,3,0]), 2(F,replace 3→[4,2,0]), 3(F,replace 0→[4,2,3]). Total = 9 page faults."
   },
   {
     question: "Which page replacement algorithm is optimal but impractical to implement?",
@@ -1104,6 +1104,6 @@ export const operatingSystemsQuestions: Question[] = [
       "280 cylinders"
     ],
     answer: 1,
-    explanation: "SCAN from 50 toward 199: 50→82(32)→140(58)→170(30)→190(20)→199(9, must go to end)→43(156)→24(19)→16(8). Wait—actually: 50→82→140→170→190→199(end), then reverse→43→24→16. Total = (199-50) + (199-16) = 149 + 183 = 332 cylinders."
+    explanation: "SCAN from 50 toward 199 services 82, 140, 170, and 190, continues to the end at 199, then reverses to service 43, 24, and 16. Total head movement = (199 - 50) + (199 - 16) = 149 + 183 = 332 cylinders."
   },
 ];

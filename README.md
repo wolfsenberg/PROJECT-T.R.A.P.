@@ -1,40 +1,46 @@
-<<<<<<< HEAD
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# T.R.A.P.
 
-## Getting Started
-
-First, run the development server:
-
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+```text
+TOTAL REVIEW ASSESSMENT PROJECT
+TO REVIEW AND PASS
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Seven sectors.  
+Seven hundred signals.  
+One threshold.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+This is not a library.  
+This is not a dashboard.  
+This is a quiet checkpoint.
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+You enter.
+You answer.
+You submit.
+You learn what still follows you.
 
-## Learn More
+## Clearance
 
-To learn more about Next.js, take a look at the following resources:
+```text
+SECTORS     07
+ITEMS       700
+MARK        75%
+MEMORY      LOCAL
+MODE        REVIEW / ASSESSMENT
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Doctrine
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+The system does not predict the gate.
 
-## Deploy on Vercel
+It sharpens the one approaching it.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## Archive
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
-=======
-# PROJECT-T.R.A.P.
->>>>>>> c19488c05b8420342025df0e9642c926b65a4524
+Built for the long review sessions, the late-night resets, the last-minute walks, and the questions that keep circling back.
+
+T.R.A.P. exists for one reason:
+
+```text
+TO REVIEW.
+AND PASS.
+```

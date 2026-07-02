@@ -311,10 +311,10 @@ export const webDevelopmentQuestions: Question[] = [
     explanation: "Hex colors use #RRGGBB format. #FF0000 = max red, no green, no blue = pure red. #00FF00 = green, #0000FF = blue, #FFFF00 = yellow.",
   },
   {
-    question: "What is the difference between rgb() and rgba() in CSS?",
+    question: "In traditional CSS color notation, what is the difference between rgb() and rgba()?",
     choices: ["rgba supports animation", "rgba includes an alpha (opacity) channel", "rgb only works with hex values", "There is no difference"],
     answer: 1,
-    explanation: "rgba(r, g, b, a) adds an alpha channel (0-1) for transparency. rgba(255, 0, 0, 0.5) is 50% transparent red. rgb() has no transparency control.",
+    explanation: "In traditional notation, rgba(r, g, b, a) adds an alpha channel (0-1) for transparency. rgba(255, 0, 0, 0.5) is 50% transparent red. Modern CSS also supports alpha syntax in rgb(), such as rgb(255 0 0 / 50%).",
   },
   {
     question: "Which CSS property changes the font typeface?",

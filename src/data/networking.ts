@@ -46,7 +46,7 @@ export const networkingQuestions: Question[] = [
     question: "Which protocol is used for sending email between mail servers?",
     choices: ["POP3", "IMAP", "SMTP", "HTTP"],
     answer: 2,
-    explanation: "SMTP (Simple Mail Transfer Protocol, port 25) is used for sending and relaying email between mail servers and from clients to servers."
+    explanation: "SMTP (Simple Mail Transfer Protocol) is used for sending and relaying email. Port 25 is the traditional server-to-server SMTP relay port; client message submission commonly uses port 587."
   },
   {
     question: "What is the default port number for DNS?",

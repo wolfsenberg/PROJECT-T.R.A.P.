@@ -893,7 +893,7 @@ export const itFundamentalsQuestions: Question[] = [
     ],
     answer: 1,
     explanation:
-      "Patents protect inventions, processes, and functional designs (e.g., a new algorithm or hardware invention) for a limited time (usually 20 years). Copyrights protect original creative works (software code, books, music) for the author's lifetime plus additional years.",
+      "Patents protect qualifying inventions, technical processes, and functional designs for a limited time (often 20 years from filing, depending on jurisdiction). Copyrights protect original works of authorship such as software code, books, and music for the author's lifetime plus additional years.",
   },
   {
     question: "Software piracy includes all of the following EXCEPT:",
