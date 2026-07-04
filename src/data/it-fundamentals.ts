@@ -538,7 +538,7 @@ export const itFundamentalsQuestions: Question[] = [
     ],
     answer: 1,
     explanation:
-      "Unicode supports over 143,000 characters from virtually every writing system in the world, while ASCII is limited to 128 characters (English letters, digits, and symbols). Unicode uses variable-length encoding (UTF-8, UTF-16).",
+      "Unicode supports more than 150,000 assigned characters across many writing systems, while ASCII is limited to 128 characters (English letters, digits, and symbols). Unicode can be encoded using formats such as UTF-8 and UTF-16.",
   },
   {
     question: "Convert hexadecimal A7 to decimal.",

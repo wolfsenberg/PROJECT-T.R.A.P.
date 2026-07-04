@@ -5,6 +5,7 @@ import { createContext, useContext, useState, useEffect, ReactNode } from "react
 interface TopicProgress {
   answers: (number | null)[];       // user's answers (null = unanswered)
   questions: number[];              // shuffled question indices (to keep order consistent on return)
+  choiceOrders: number[][];         // shuffled choice indices per displayed question
   submitted: boolean;               // true = locked/done
   score: number;                    // correct count (only meaningful when submitted)
   total: number;                    // total questions
@@ -23,7 +24,7 @@ interface GameContextType {
   state: GameState;
   getTopicProgress: (topicId: string) => TopicProgress | null;
   isTopicSubmitted: (topicId: string) => boolean;
-  startOrResumeTopic: (topicId: string, totalQuestions: number) => TopicProgress;
+  startOrResumeTopic: (topicId: string, totalQuestions: number, choiceCounts: number[]) => TopicProgress;
   saveAnswer: (topicId: string, questionIndex: number, answer: number) => void;
   submitTopic: (topicId: string, score: number) => void;
   getCompletedCount: () => number;
@@ -45,6 +46,31 @@ const defaultState: GameState = {
 };
 
 const GameContext = createContext<GameContextType | null>(null);
+
+const shuffleIndices = (length: number): number[] => {
+  const indices = Array.from({ length }, (_, i) => i);
+  for (let i = indices.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [indices[i], indices[j]] = [indices[j], indices[i]];
+  }
+  return indices;
+};
+
+const createChoiceOrders = (choiceCounts: number[]): number[][] => {
+  return choiceCounts.map((count) => shuffleIndices(count));
+};
+
+const createTopicProgress = (totalQuestions: number, choiceCounts: number[]): TopicProgress => {
+  const indices = shuffleIndices(totalQuestions);
+  return {
+    answers: new Array(totalQuestions).fill(null),
+    questions: indices,
+    choiceOrders: createChoiceOrders(indices.map((questionIndex) => choiceCounts[questionIndex] ?? 4)),
+    submitted: false,
+    score: 0,
+    total: totalQuestions,
+  };
+};
 
 export function GameProvider({ children }: { children: ReactNode }) {
   const [state, setState] = useState<GameState>(defaultState);
@@ -74,24 +100,44 @@ export function GameProvider({ children }: { children: ReactNode }) {
     return !!state.topics[topicId]?.submitted;
   };
 
-  const startOrResumeTopic = (topicId: string, totalQuestions: number): TopicProgress => {
+  const startOrResumeTopic = (topicId: string, totalQuestions: number, choiceCounts: number[]): TopicProgress => {
     const existing = state.topics[topicId];
-    if (existing) return existing;
+    if (existing) {
+      if (existing.submitted) {
+        const retakeProgress = createTopicProgress(totalQuestions, choiceCounts);
 
-    // Create shuffled indices for this topic
-    const indices = Array.from({ length: totalQuestions }, (_, i) => i);
-    for (let i = indices.length - 1; i > 0; i--) {
-      const j = Math.floor(Math.random() * (i + 1));
-      [indices[i], indices[j]] = [indices[j], indices[i]];
+        setState((prev) => ({
+          ...prev,
+          topics: { ...prev.topics, [topicId]: retakeProgress },
+          allCompleted: false,
+          overallScore: 0,
+          overallTotal: 0,
+          overallPassed: false,
+        }));
+
+        return retakeProgress;
+      }
+
+      if (existing.choiceOrders?.length === totalQuestions) return existing;
+
+      const questionIndices = existing.questions.length === totalQuestions ? existing.questions : shuffleIndices(totalQuestions);
+      const choiceOrders = createChoiceOrders(questionIndices.map((questionIndex) => choiceCounts[questionIndex] ?? 4));
+      const migratedAnswers = existing.answers.map((answer, questionIndex) => {
+        if (answer === null) return null;
+        const displayIndex = choiceOrders[questionIndex]?.indexOf(answer) ?? -1;
+        return displayIndex >= 0 ? displayIndex : answer;
+      });
+      const updatedProgress = { ...existing, answers: migratedAnswers, questions: questionIndices, choiceOrders };
+
+      setState((prev) => ({
+        ...prev,
+        topics: { ...prev.topics, [topicId]: updatedProgress },
+      }));
+
+      return updatedProgress;
     }
 
-    const newProgress: TopicProgress = {
-      answers: new Array(totalQuestions).fill(null),
-      questions: indices,
-      submitted: false,
-      score: 0,
-      total: totalQuestions,
-    };
+    const newProgress = createTopicProgress(totalQuestions, choiceCounts);
 
     setState((prev) => ({
       ...prev,

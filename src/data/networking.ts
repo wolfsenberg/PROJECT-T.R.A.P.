@@ -3,7 +3,7 @@ import { Question } from "./types";
 export const networkingQuestions: Question[] = [
   // ==================== PROTOCOLS (15 questions) ====================
   {
-    question: "According to Forouzan, what is a protocol in data communications?",
+    question: "What is a protocol in data communications?",
     choices: [
       "A physical cable connecting devices",
       "A set of rules that govern data communications",
@@ -700,7 +700,7 @@ export const networkingQuestions: Question[] = [
       "Application Layer"
     ],
     answer: 1,
-    explanation: "The Internet Layer of TCP/IP (equivalent to OSI Layer 3) is responsible for IP addressing, routing, and forwarding packets across networks. IP, ICMP, and ARP operate here."
+    explanation: "The Internet Layer of TCP/IP (equivalent to OSI Layer 3) is responsible for IP addressing, routing, and forwarding packets across networks. IP operates here; ICMP supports Internet-layer control and diagnostics, while ARP is usually treated as a link-layer address-resolution protocol that supports IPv4 on local networks."
   },
   {
     question: "What happens if a TCP segment is lost during transmission?",
@@ -946,7 +946,7 @@ export const networkingQuestions: Question[] = [
     explanation: "Routers separate broadcast domains — broadcasts do not pass through routers. Switches (without VLANs) forward broadcasts to all ports. VLANs on a switch also create separate broadcast domains."
   },
   {
-    question: "According to Forouzan, what are the five components of data communication?",
+    question: "What are the five common components of data communication?",
     choices: [
       "Hardware, software, protocol, topology, medium",
       "Message, sender, receiver, transmission medium, and protocol",
@@ -954,7 +954,7 @@ export const networkingQuestions: Question[] = [
       "Data, signal, encoding, modulation, transmission"
     ],
     answer: 1,
-    explanation: "Forouzan defines five components of data communication: Message (data), Sender (device that sends), Receiver (device that receives), Transmission medium (physical path), and Protocol (rules)."
+    explanation: "A common data-communications model identifies five components: Message (data), Sender (device that sends), Receiver (device that receives), Transmission medium (physical path), and Protocol (rules)."
   },
   {
     question: "In switch operation, what is 'forwarding'?",

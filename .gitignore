@@ -25,6 +25,18 @@
 *.pem
 AGENTS.md
 CLAUDE.md
+CONTEXT.md
+
+# local AI/agent/tooling context
+/.agents/
+/.codex/
+/.mcp/
+/.cursor/
+.aider*
+
+# local Python tooling
+/.venv/
+.venv/
 
 # debug
 npm-debug.log*
