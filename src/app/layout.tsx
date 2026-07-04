@@ -5,6 +5,11 @@ import { GameProvider } from "@/context/GameContext";
 export const metadata: Metadata = {
   title: "Mock Reviewer",
   description: "Mock Reviewer",
+  icons: {
+    icon: "/favicon.svg",
+    shortcut: "/favicon.svg",
+    apple: "/favicon.svg",
+  },
 };
 
 export default function RootLayout({

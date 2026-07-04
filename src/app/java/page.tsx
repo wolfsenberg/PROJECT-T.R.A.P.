@@ -12,7 +12,7 @@ import {
   type JavaDifficulty,
   type JavaPracticeItem,
 } from "@/data/java";
-import { ArrowLeftIcon, BookIcon, CheckIcon, ClipboardIcon, CodeIcon, XIcon } from "@/components/Icons";
+import { ArrowLeftIcon, BookIcon, CheckIcon, ClipboardIcon, CodeIcon, PencilIcon, PlayIcon, TableIcon, TargetIcon, XIcon } from "@/components/Icons";
 import XPTaskbar from "@/components/XPTaskbar";
 
 type JavaView = "cheatsheet" | "practice" | "coding";
@@ -161,9 +161,15 @@ export default function JavaReviewerPage() {
             <CodeIcon className="xp-titlebar-icon text-white" />
             <span className="xp-titlebar-text">Java Reviewer</span>
             <div className="xp-titlebar-buttons">
-              <div className="xp-titlebar-btn xp-btn-minimize" />
-              <div className="xp-titlebar-btn xp-btn-maximize" />
-              <div className="xp-titlebar-btn xp-btn-close" />
+              <div className="xp-titlebar-btn xp-btn-minimize">
+                <svg viewBox="0 0 10 10" className="w-[9px] h-[9px]"><rect x="1" y="7" width="8" height="2" fill="white"/></svg>
+              </div>
+              <div className="xp-titlebar-btn xp-btn-maximize">
+                <svg viewBox="0 0 10 10" className="w-[9px] h-[9px]"><rect x="1" y="1" width="8" height="8" fill="none" stroke="white" strokeWidth="2"/></svg>
+              </div>
+              <div className="xp-titlebar-btn xp-btn-close">
+                <svg viewBox="0 0 10 10" className="w-[9px] h-[9px]"><path d="M2 2L8 8M8 2L2 8" stroke="white" strokeWidth="2"/></svg>
+              </div>
             </div>
           </div>
 
@@ -172,13 +178,16 @@ export default function JavaReviewerPage() {
               <ArrowLeftIcon className="w-3.5 h-3.5" />
               Back
             </Link>
-            <button className={view === "cheatsheet" ? "xp-button-primary" : "xp-button"} onClick={() => setView("cheatsheet")}>
+            <button className={view === "cheatsheet" ? "xp-button-primary java-mode-button" : "xp-button java-mode-button"} onClick={() => setView("cheatsheet")}>
+              <TableIcon className="w-3.5 h-3.5" />
               Cheat Sheet
             </button>
-            <button className={view === "practice" ? "xp-button-primary" : "xp-button"} onClick={() => setView("practice")}>
+            <button className={view === "practice" ? "xp-button-primary java-mode-button" : "xp-button java-mode-button"} onClick={() => setView("practice")}>
+              <PencilIcon className="w-3.5 h-3.5" />
               Practice
             </button>
-            <button className={view === "coding" ? "xp-button-primary" : "xp-button"} onClick={() => setView("coding")}>
+            <button className={view === "coding" ? "xp-button-primary java-mode-button" : "xp-button java-mode-button"} onClick={() => setView("coding")}>
+              <PlayIcon className="w-3.5 h-3.5" />
               Coding Problems
             </button>
             <span className="java-toolbar-meter ml-auto">
@@ -203,18 +212,23 @@ export default function JavaReviewerPage() {
             </div>
 
             {view === "cheatsheet" && (
-              <section className="java-section">
-                <div className="java-topic-tabs" aria-label="Java topics">
+              <section className="java-section java-cheatsheet-layout">
+                <aside className="java-topic-rail" aria-label="Java topics">
+                  <div className="java-rail-title">
+                    <BookIcon className="w-4 h-4" />
+                    <span>Topics</span>
+                  </div>
                   {javaCheatTopics.map((topic) => (
                     <button
                       key={topic.id}
-                      className={activeTopic === topic.id ? "xp-button-primary" : "xp-button"}
+                      className={activeTopic === topic.id ? "java-topic-tab active" : "java-topic-tab"}
                       onClick={() => setActiveTopic(topic.id)}
                     >
-                      {topic.title}
+                      <span>{topic.title}</span>
+                      <span className={difficultyClass(topic.difficulty)}>{topic.difficulty}</span>
                     </button>
                   ))}
-                </div>
+                </aside>
 
                 <div className="java-panel">
                   <div className="java-panel-heading">
@@ -223,6 +237,21 @@ export default function JavaReviewerPage() {
                       <p>{activeCheatTopic.summary}</p>
                     </div>
                     <span className={difficultyClass(activeCheatTopic.difficulty)}>{activeCheatTopic.difficulty}</span>
+                  </div>
+
+                  <div className="java-cheat-snapshot">
+                    <div>
+                      <TableIcon className="w-4 h-4" />
+                      <span>{activeCheatTopic.rows.length} key concepts</span>
+                    </div>
+                    <div>
+                      <TargetIcon className="w-4 h-4" />
+                      <span>Quick recall cues</span>
+                    </div>
+                    <div>
+                      <CheckIcon className="w-4 h-4" />
+                      <span>Source-backed</span>
+                    </div>
                   </div>
 
                   <div className="java-table-wrap">
