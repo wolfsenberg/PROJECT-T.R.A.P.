@@ -136,10 +136,10 @@ export default function NotesPage() {
                         <tbody>
                           {table.rows.map((row) => (
                             <tr key={`${table.heading}-${row.term}`}>
-                              <td>{row.term}</td>
-                              <td>{row.meaning}</td>
-                              <td>{row.memory}</td>
-                              <td>{row.trap}</td>
+                              <td data-label="Term">{row.term}</td>
+                              <td data-label="Definition">{row.meaning}</td>
+                              <td data-label="Remember">{row.memory}</td>
+                              <td data-label="Common Mistake">{row.trap}</td>
                             </tr>
                           ))}
                         </tbody>

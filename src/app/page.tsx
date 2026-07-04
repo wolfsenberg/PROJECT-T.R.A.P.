@@ -137,7 +137,7 @@ export default function Home() {
 
             {/* Topic ListView */}
             <div className="xp-listview mb-4">
-              <div className="xp-listview-header" style={{ gridTemplateColumns: "40px 1fr 65px 80px 105px 105px" }}>
+              <div className="xp-listview-header xp-topic-header" style={{ gridTemplateColumns: "40px 1fr 65px 80px 105px 105px" }}>
                 <div>#</div>
                 <div>Topic</div>
                 <div>Items</div>
@@ -156,17 +156,20 @@ export default function Home() {
                 return (
                   <div
                     key={topic.id}
-                    className="xp-listview-row"
+                    className="xp-listview-row xp-topic-row"
                     style={{ gridTemplateColumns: "40px 1fr 65px 80px 105px 105px" }}
                     onClick={() => handleTopicTap(topic.id)}
                   >
-                    <div className="text-[12px]">{i + 1}</div>
-                    <div>
+                    <div className="xp-topic-number text-[12px]">{i + 1}</div>
+                    <div className="xp-topic-name">
                       {IconComponent && <IconComponent className="w-4 h-4 text-[#0054e3]" />}
-                      <span className="text-[12px] truncate font-bold">{topic.title}</span>
+                      <span className="xp-topic-copy">
+                        <span className="xp-topic-title text-[12px] truncate font-bold">{topic.title}</span>
+                        <span className="xp-topic-description">{topic.description}</span>
+                      </span>
                     </div>
-                    <div className="text-[12px]">{topic.questions.length}</div>
-                    <div>
+                    <div className="xp-topic-items text-[12px]">{topic.questions.length}</div>
+                    <div className="xp-topic-status">
                       {submitted ? (
                         <span className="flex items-center gap-1 text-[11px] font-bold" style={{ color: score !== null && score >= 75 ? "#006100" : "#9c0006" }}>
                           {score !== null && score >= 75 ? (
@@ -182,13 +185,13 @@ export default function Home() {
                         <span className="text-[11px] text-[#808080]">Pending</span>
                       )}
                     </div>
-                    <div>
+                    <div className="xp-topic-action">
                       <Link href={`/notes/${topic.id}`} className="xp-button text-[11px] px-2 py-1 no-underline flex items-center gap-1">
                         <BookIcon className="w-3.5 h-3.5" />
                         Notes
                       </Link>
                     </div>
-                    <div>
+                    <div className="xp-topic-action">
                       <Link href={`/quiz/${topic.id}`} className="xp-button text-[11px] px-2 py-1 no-underline flex items-center gap-1">
                         <PencilIcon className="w-3.5 h-3.5" />
                         {submitted ? "Retake" : inProgress ? "Resume" : "Exam"}
