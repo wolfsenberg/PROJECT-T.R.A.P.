@@ -138,8 +138,8 @@ export default function QuizPage() {
                   <span className="font-bold">{questions.length - answered}</span>
                 </div>
               </div>
-              <p className="text-[11px] text-[#444] text-center mb-4">This topic is now locked. Complete remaining topics to see overall score.</p>
-              <div className="flex gap-2 justify-center">
+              <p className="text-[11px] text-[#444] text-center mb-4">Review your answers before going back. You can retake this topic from the home screen.</p>
+              <div className="quiz-result-actions flex gap-2 justify-center">
                 <button onClick={() => setView("review")} className="xp-button cursor-pointer">Review Answers</button>
                 <button onClick={() => router.push("/")} className="xp-button-primary cursor-pointer">OK</button>
               </div>
