@@ -1,10 +1,10 @@
 const problems = {
   "jc-001": {
-    title: "Hello Name",
+    title: "Echo Name",
     tests: [
-      { input: "Ana\n", expectedOutput: "Hello, Ana!" },
-      { input: "Miguel\n", expectedOutput: "Hello, Miguel!" },
-      { input: "Lara\n", expectedOutput: "Hello, Lara!" },
+      { input: "Ana\n", expectedOutput: "Hello, Ana" },
+      { input: "Miguel\n", expectedOutput: "Hello, Miguel" },
+      { input: "Lara\n", expectedOutput: "Hello, Lara" },
     ],
   },
   "jc-002": {
