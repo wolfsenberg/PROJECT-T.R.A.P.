@@ -30,3 +30,15 @@ If the current exam answer conflicts with verified source material, update the e
 
 Do not present uncertain content as verified. Mark it as Needs verification and record it in the internal content audit.
 
+## Java Reviewer Sources
+
+Use Java sources in this order:
+
+1. PUP/CCIS or PUP syllabus/materials, if available.
+2. Oracle Java official documentation and tutorials.
+3. w3resource Java exercises and references.
+4. OpenJDK documentation.
+5. Reputable university/open course materials.
+6. Secondary sources only if needed.
+
+If a Java language fact conflicts across sources, use official Java documentation or OpenJDK documentation for correctness.
