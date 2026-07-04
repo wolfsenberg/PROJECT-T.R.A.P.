@@ -8,7 +8,7 @@ const { problems } = require("./problems");
 const app = express();
 const port = Number(process.env.PORT || 4000);
 const maxCodeLength = 12000;
-const commandTimeoutMs = 3500;
+const commandTimeoutMs = Number(process.env.JAVA_RUNNER_TIMEOUT_MS || 10000);
 const maxOutputBytes = 64 * 1024;
 
 app.use(express.json({ limit: "32kb" }));
@@ -69,17 +69,21 @@ app.post("/run", async (req, res) => {
       const execution = await runCommand("java", ["-Xmx64m", "-cp", workDir, "Main"], test.input, workDir);
       const actual = normalizeOutput(execution.stdout);
       const expected = normalizeOutput(test.expectedOutput);
+      const outputMatches = compareOutput(actual, expected);
       results.push({
         test: index + 1,
-        passed: execution.code === 0 && actual === expected,
+        passed: execution.code === 0 && outputMatches,
         expected,
         actual: execution.code === 0 ? actual : normalizeOutput(execution.stderr || execution.stdout),
+        matchedBy: outputMatches ? "standard-output" : null,
       });
     }
 
     res.json({
       ok: true,
       passed: results.every((result) => result.passed),
+      gradingMode: "standard-output",
+      message: "Accepted solutions are judged by stdout, not by matching a specific code pattern.",
       results,
     });
   } catch (error) {
@@ -134,6 +138,16 @@ function normalizeOutput(output) {
     .map((line) => line.trimEnd())
     .join("\n")
     .trim();
+}
+
+function compareOutput(actual, expected) {
+  return comparableOutput(actual) === comparableOutput(expected);
+}
+
+function comparableOutput(output) {
+  const normalized = normalizeOutput(output);
+  if (!normalized) return "";
+  return normalized.split(/\s+/).join(" ");
 }
 
 function runCommand(command, args, input, cwd) {

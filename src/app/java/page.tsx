@@ -26,6 +26,8 @@ type JavaProgress = {
 type RunnerResult = {
   ok: boolean;
   passed: boolean;
+  gradingMode?: string;
+  message?: string;
   compileOutput?: string;
   error?: string;
   results?: Array<{
@@ -33,6 +35,7 @@ type RunnerResult = {
     passed: boolean;
     expected: string;
     actual: string;
+    matchedBy?: string | null;
   }>;
 };
 
@@ -413,6 +416,10 @@ export default function JavaReviewerPage() {
                       <p><strong>Input:</strong> {activeProblem.inputFormat}</p>
                       <p><strong>Output:</strong> {activeProblem.outputFormat}</p>
                       <p><strong>Remember:</strong> {activeProblem.explanation}</p>
+                      <div className="java-grading-note">
+                        <TargetIcon className="w-4 h-4" />
+                        <span>Accepted by standard output. Different variable names, methods, loops, or OOP structure are fine.</span>
+                      </div>
                     </div>
                     <div className="java-samples">
                       {activeProblem.sampleTests.map((test, index) => (
@@ -441,7 +448,8 @@ export default function JavaReviewerPage() {
                     />
                     {runnerResult && (
                       <div className={runnerResult.passed ? "java-runner-result good" : "java-runner-result bad"}>
-                        <p className="font-bold">{runnerResult.passed ? "All tests passed." : "Needs fixing."}</p>
+                        <p className="font-bold">{runnerResult.passed ? "Output accepted." : "Needs fixing."}</p>
+                        {runnerResult.message && <p>{runnerResult.message}</p>}
                         {runnerResult.error && <pre>{runnerResult.error}</pre>}
                         {runnerResult.compileOutput && <pre>{runnerResult.compileOutput}</pre>}
                         {runnerResult.results?.map((result) => (
