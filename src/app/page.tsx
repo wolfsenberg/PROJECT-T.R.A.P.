@@ -3,7 +3,7 @@
 import { useRef } from "react";
 import Link from "next/link";
 import { quizTopics } from "@/data";
-import { iconMap, CheckIcon, XIcon, BookIcon, PencilIcon } from "@/components/Icons";
+import { iconMap, CheckIcon, XIcon, BookIcon, PencilIcon, CodeIcon } from "@/components/Icons";
 import { useGame } from "@/context/GameContext";
 import XPTaskbar from "@/components/XPTaskbar";
 
@@ -86,6 +86,22 @@ export default function Home() {
               <div className="xp-progress">
                 <div className="xp-progress-fill" style={{ width: `${progressPct}%` }} />
               </div>
+            </div>
+
+            <div className="java-home-callout mb-4">
+              <div className="java-home-icon">
+                <CodeIcon className="w-5 h-5" />
+              </div>
+              <div>
+                <p className="font-bold text-[12px] mb-1">Java Reviewer</p>
+                <p className="text-[11px] text-[#333333]">
+                  Separate Java cheat sheet, 80 practice items, and 20 coding problems with a desktop runner.
+                </p>
+              </div>
+              <Link href="/java" className="xp-button-primary no-underline inline-flex items-center gap-1">
+                <CodeIcon className="w-3.5 h-3.5" />
+                Open
+              </Link>
             </div>
 
             {/* Results Panel (only when all done) */}

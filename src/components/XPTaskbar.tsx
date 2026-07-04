@@ -3,7 +3,7 @@
 import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import { quizTopics } from "@/data";
-import { iconMap, CheckIcon, XIcon } from "@/components/Icons";
+import { iconMap, CheckIcon, XIcon, CodeIcon } from "@/components/Icons";
 import { useGame } from "@/context/GameContext";
 
 function WindowsFlag({ className = "w-4 h-4" }: { className?: string }) {
@@ -153,6 +153,17 @@ export default function XPTaskbar() {
                     </Link>
                   );
                 })}
+                <Link
+                  href="/java"
+                  onClick={() => setStartOpen(false)}
+                  className="flex items-center gap-2 px-3 py-[6px] no-underline text-[11px] hover:bg-[#316ac5] hover:text-white text-[#000000] cursor-pointer border-t border-[#ece9d8]"
+                >
+                  <span className="w-5 h-5 flex items-center justify-center flex-shrink-0">
+                    <CodeIcon className="w-4 h-4 text-[#0054e3]" />
+                  </span>
+                  <span className="flex-1 truncate">Java Reviewer</span>
+                  <span className="text-[10px] text-[#808080]">20 code</span>
+                </Link>
               </div>
 
               {/* Right: Progress info */}
