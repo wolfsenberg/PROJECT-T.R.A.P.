@@ -36,9 +36,9 @@ Use Java sources in this order:
 
 1. PUP/CCIS or PUP syllabus/materials, if available.
 2. Oracle Java official documentation and tutorials.
-3. w3resource Java exercises and references.
-4. OpenJDK documentation.
-5. Reputable university/open course materials.
+3. OpenJDK documentation.
+4. Reputable university/open course materials, including Princeton IntroCS and MIT OCW.
+5. w3resource Java exercises and references.
 6. Secondary sources only if needed.
 
 If a Java language fact conflicts across sources, use official Java documentation or OpenJDK documentation for correctness.

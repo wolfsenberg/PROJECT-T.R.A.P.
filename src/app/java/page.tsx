@@ -12,7 +12,7 @@ import {
   type JavaDifficulty,
   type JavaPracticeItem,
 } from "@/data/java";
-import { ArrowLeftIcon, BookIcon, CheckIcon, ClipboardIcon, CodeIcon, PencilIcon, PlayIcon, TableIcon, TargetIcon, XIcon } from "@/components/Icons";
+import { ArrowLeftIcon, BookIcon, CheckIcon, ClipboardIcon, CodeIcon, LayersIcon, PencilIcon, PlayIcon, TableIcon, TargetIcon, XIcon } from "@/components/Icons";
 import XPTaskbar from "@/components/XPTaskbar";
 
 type JavaView = "cheatsheet" | "practice" | "coding";
@@ -44,6 +44,7 @@ const emptyProgress: JavaProgress = {
 
 const progressKey = "java-reviewer-progress-v1";
 const runnerUrl = process.env.NEXT_PUBLIC_JAVA_RUNNER_URL || "http://localhost:4000";
+const oopTopicIds = ["oop", "constructors", "inheritance", "interfaces"];
 
 function difficultyClass(difficulty: JavaDifficulty) {
   return `java-badge java-badge-${difficulty.toLowerCase()}`;
@@ -85,6 +86,7 @@ export default function JavaReviewerPage() {
 
   const activeCheatTopic = javaCheatTopics.find((topic) => topic.id === activeTopic) ?? javaCheatTopics[0];
   const activeProblem = javaCodingProblems.find((problem) => problem.id === activeProblemId) ?? javaCodingProblems[0];
+  const oopTopics = javaCheatTopics.filter((topic) => oopTopicIds.includes(topic.id));
 
   const filteredPractice = useMemo(() => {
     return javaPracticeItems
@@ -208,6 +210,27 @@ export default function JavaReviewerPage() {
                     </a>
                   ))}
                 </div>
+              </div>
+            </div>
+
+            <div className="java-oop-strip mb-4">
+              <div className="java-oop-title">
+                <LayersIcon className="w-4 h-4" />
+                <span>Object-Oriented Track</span>
+              </div>
+              <div className="java-oop-links">
+                {oopTopics.map((topic) => (
+                  <button
+                    key={topic.id}
+                    className="java-oop-link"
+                    onClick={() => {
+                      setView("cheatsheet");
+                      setActiveTopic(topic.id);
+                    }}
+                  >
+                    {topic.title}
+                  </button>
+                ))}
               </div>
             </div>
 
