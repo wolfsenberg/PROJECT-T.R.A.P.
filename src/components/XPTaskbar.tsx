@@ -114,13 +114,9 @@ export default function XPTaskbar() {
                   return (
                     <Link
                       key={topic.id}
-                      href={!submitted && !state.allCompleted ? `/quiz/${topic.id}` : "#"}
+                      href={`/quiz/${topic.id}`}
                       onClick={() => setStartOpen(false)}
-                      className={`flex items-center gap-2 px-3 py-[6px] no-underline text-[11px] ${
-                        !submitted && !state.allCompleted
-                          ? "hover:bg-[#316ac5] hover:text-white text-[#000000] cursor-pointer"
-                          : "text-[#808080] cursor-default"
-                      }`}
+                      className="flex items-center gap-2 px-3 py-[6px] no-underline text-[11px] hover:bg-[#316ac5] hover:text-white text-[#000000] cursor-pointer"
                     >
                       <span className="w-5 h-5 flex items-center justify-center flex-shrink-0">
                         {submitted ? (
@@ -149,7 +145,7 @@ export default function XPTaskbar() {
                           {answeredCount}/100
                         </span>
                       )}
-                      {!submitted && !state.allCompleted && answeredCount === 0 && (
+                      {!submitted && answeredCount === 0 && (
                         <span className="text-[10px] text-[#808080]">
                           100
                         </span>

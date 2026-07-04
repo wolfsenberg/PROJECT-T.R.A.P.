@@ -3,8 +3,8 @@ import "./globals.css";
 import { GameProvider } from "@/context/GameContext";
 
 export const metadata: Metadata = {
-  title: "PUP CCIS Mock Test Reviewer",
-  description: "PUP CCIS Mock Test Reviewer",
+  title: "Mock Reviewer",
+  description: "Mock Reviewer",
 };
 
 export default function RootLayout({

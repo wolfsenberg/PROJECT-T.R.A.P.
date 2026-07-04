@@ -3,7 +3,7 @@
 import { useRef } from "react";
 import Link from "next/link";
 import { quizTopics } from "@/data";
-import { iconMap, CheckIcon, XIcon } from "@/components/Icons";
+import { iconMap, CheckIcon, XIcon, BookIcon, PencilIcon } from "@/components/Icons";
 import { useGame } from "@/context/GameContext";
 import XPTaskbar from "@/components/XPTaskbar";
 
@@ -49,7 +49,7 @@ export default function Home() {
               <path d="M2 2h12v12H2V2zm1 2v8h10V4H3zm1 1h8v1H4V5zm0 2h8v1H4V7zm0 2h5v1H4V9z"/>
             </svg>
             <span className="xp-titlebar-text">
-              PUP CCIS Mock Test Reviewer
+              Mock Reviewer
             </span>
             <div className="xp-titlebar-buttons">
               <div className="xp-titlebar-btn xp-btn-minimize">
@@ -73,7 +73,7 @@ export default function Home() {
               </svg>
               <div className="text-[12px] text-[#000000]">
                 <p className="font-bold mb-1">Part I: Written Examination</p>
-                <p>7 Topics, 700 Total Items - 75% Passing Score (525 correct answers required)</p>
+                <p>7 Topics with Review Notes and Exam Mode - 75% Passing Score (525 correct answers required)</p>
               </div>
             </div>
 
@@ -137,12 +137,13 @@ export default function Home() {
 
             {/* Topic ListView */}
             <div className="xp-listview mb-4">
-              <div className="xp-listview-header" style={{ gridTemplateColumns: "40px 1fr 65px 80px 80px" }}>
+              <div className="xp-listview-header" style={{ gridTemplateColumns: "40px 1fr 65px 80px 105px 105px" }}>
                 <div>#</div>
                 <div>Topic</div>
                 <div>Items</div>
                 <div>Status</div>
-                <div>Action</div>
+                <div>Review</div>
+                <div>Exam</div>
               </div>
               {quizTopics.map((topic, i) => {
                 const submitted = isTopicSubmitted(topic.id);
@@ -156,7 +157,7 @@ export default function Home() {
                   <div
                     key={topic.id}
                     className="xp-listview-row"
-                    style={{ gridTemplateColumns: "40px 1fr 65px 80px 80px" }}
+                    style={{ gridTemplateColumns: "40px 1fr 65px 80px 105px 105px" }}
                     onClick={() => handleTopicTap(topic.id)}
                   >
                     <div className="text-[12px]">{i + 1}</div>
@@ -182,16 +183,16 @@ export default function Home() {
                       )}
                     </div>
                     <div>
-                      {!submitted && !state.allCompleted ? (
-                        <Link href={`/quiz/${topic.id}`} className="xp-button text-[11px] px-3 py-1 no-underline">
-                          {inProgress ? "Resume" : "Start"}
-                        </Link>
-                      ) : submitted ? (
-                        <span className="flex items-center gap-1 text-[11px] text-[#006100]">
-                          <CheckIcon className="w-3.5 h-3.5" />
-                          Done
-                        </span>
-                      ) : null}
+                      <Link href={`/notes/${topic.id}`} className="xp-button text-[11px] px-2 py-1 no-underline flex items-center gap-1">
+                        <BookIcon className="w-3.5 h-3.5" />
+                        Notes
+                      </Link>
+                    </div>
+                    <div>
+                      <Link href={`/quiz/${topic.id}`} className="xp-button text-[11px] px-2 py-1 no-underline flex items-center gap-1">
+                        <PencilIcon className="w-3.5 h-3.5" />
+                        {submitted ? "Retake" : inProgress ? "Resume" : "Exam"}
+                      </Link>
                     </div>
                   </div>
                 );

@@ -3,6 +3,7 @@
 import { useState, useMemo, useCallback, useEffect } from "react";
 import { useParams, useRouter } from "next/navigation";
 import { quizTopics } from "@/data";
+import { notesByTopic } from "@/data/notes";
 import { Question } from "@/data/types";
 import { useGame } from "@/context/GameContext";
 import { ArrowLeftIcon, CheckIcon, XIcon, InfoIcon } from "@/components/Icons";
@@ -12,18 +13,16 @@ export default function QuizPage() {
   const params = useParams();
   const router = useRouter();
   const topicId = params.topicId as string;
-  const { isTopicSubmitted, startOrResumeTopic, saveAnswer, submitTopic, getTopicProgress } = useGame();
+  const { startOrResumeTopic, saveAnswer, submitTopic, getTopicProgress } = useGame();
   const topic = quizTopics.find((t) => t.id === topicId);
-
-  // Redirect if already submitted
-  useEffect(() => {
-    if (topic && isTopicSubmitted(topic.id)) router.push("/");
-  }, [topic, isTopicSubmitted, router]);
+  const topicNotes = notesByTopic[topicId];
+  const [idx, setIdx] = useState(0);
+  const [view, setView] = useState<"quiz" | "results" | "review">("quiz");
 
   // Initialize or resume progress
   const progress = useMemo(() => {
     if (!topic) return null;
-    return startOrResumeTopic(topic.id, topic.questions.length);
+    return startOrResumeTopic(topic.id, topic.questions.length, topic.questions.map((question) => question.choices.length));
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [topic?.id]);
 
@@ -33,16 +32,27 @@ export default function QuizPage() {
     return progress.questions.map((i) => topic.questions[i]);
   }, [topic, progress]);
 
-  const [idx, setIdx] = useState(0);
-  const [view, setView] = useState<"quiz" | "results" | "review">("quiz");
-
   // Use live progress from context (not local state) for answers
   const liveProgress = getTopicProgress(topicId);
   const answers = liveProgress?.answers || new Array(100).fill(null);
+  const choiceOrders = liveProgress?.choiceOrders || progress?.choiceOrders || [];
+
+  const getChoiceOrder = (questionIndex: number) => {
+    return choiceOrders[questionIndex] || questions[questionIndex]?.choices.map((_, choiceIndex) => choiceIndex) || [];
+  };
+
+  const getOriginalChoiceIndex = (questionIndex: number, displayChoiceIndex: number) => {
+    return getChoiceOrder(questionIndex)[displayChoiceIndex] ?? displayChoiceIndex;
+  };
+
+  const isAnswerCorrect = (questionIndex: number, displayChoiceIndex: number | null) => {
+    if (displayChoiceIndex === null) return false;
+    return getOriginalChoiceIndex(questionIndex, displayChoiceIndex) === questions[questionIndex]?.answer;
+  };
 
   const q: Question | undefined = questions[idx];
   const answered = answers.filter((a: number | null) => a !== null).length;
-  const correct = answers.reduce<number>((s: number, a: number | null, i: number) => (a !== null && a === questions[i]?.answer ? s + 1 : s), 0);
+  const correct = answers.reduce<number>((s: number, a: number | null, i: number) => (isAnswerCorrect(i, a) ? s + 1 : s), 0);
   const pct = questions.length > 0 ? Math.round((correct / questions.length) * 100) : 0;
 
   // Find first unanswered question to resume at
@@ -62,7 +72,7 @@ export default function QuizPage() {
   }, [answers, idx, saveAnswer, topicId]);
 
   const submit = () => {
-    const finalScore = answers.reduce<number>((s: number, a: number | null, i: number) => (a !== null && a === questions[i]?.answer ? s + 1 : s), 0);
+    const finalScore = answers.reduce<number>((s: number, a: number | null, i: number) => (isAnswerCorrect(i, a) ? s + 1 : s), 0);
     submitTopic(topicId, finalScore);
     setView("results");
   };
@@ -131,7 +141,7 @@ export default function QuizPage() {
               <p className="text-[11px] text-[#444] text-center mb-4">This topic is now locked. Complete remaining topics to see overall score.</p>
               <div className="flex gap-2 justify-center">
                 <button onClick={() => setView("review")} className="xp-button cursor-pointer">Review Answers</button>
-                <button onClick={() => router.push("/")} className="xp-button-primary cursor-pointer">Continue</button>
+                <button onClick={() => router.push("/")} className="xp-button-primary cursor-pointer">OK</button>
               </div>
             </div>
           </div>
@@ -164,7 +174,10 @@ export default function QuizPage() {
               <div className="space-y-3">
                 {questions.map((question, i) => {
                   const a = answers[i];
-                  const ok = a === question.answer;
+                  const order = getChoiceOrder(i);
+                  const selectedOriginalChoice = a === null ? null : getOriginalChoiceIndex(i, a);
+                  const correctDisplayIndex = order.indexOf(question.answer);
+                  const ok = selectedOriginalChoice === question.answer;
                   return (
                     <div key={i} className="border border-[#aca899] rounded p-3 bg-[#fafafa]">
                       <div className="flex items-start gap-2">
@@ -182,16 +195,28 @@ export default function QuizPage() {
                           {a !== null ? (
                             <div className="space-y-0.5">
                               <p className="text-[11px]" style={{ color: ok ? "#006100" : "#9c0006" }}>
-                                Your answer: {letters[a]}. {question.choices[a]}
+                                Your answer: {letters[a]}. {selectedOriginalChoice !== null ? question.choices[selectedOriginalChoice] : ""}
                               </p>
                               {!ok && (
-                                <p className="text-[11px] text-[#006100]">Correct: {letters[question.answer]}. {question.choices[question.answer]}</p>
+                                <p className="text-[11px] text-[#006100]">Correct: {letters[correctDisplayIndex]}. {question.choices[question.answer]}</p>
                               )}
                             </div>
                           ) : (
                             <p className="text-[11px] text-[#808080]">Skipped</p>
                           )}
                           <p className="text-[11px] text-[#0054e3] mt-1">{question.explanation}</p>
+                          {topicNotes?.sources.length ? (
+                            <details className="quiz-source-details mt-2">
+                              <summary>Topic sources</summary>
+                              <div className="quiz-source-list">
+                                {topicNotes.sources.map((source) => (
+                                  <a key={source.url} href={source.url} target="_blank" rel="noreferrer" className="quiz-source-link">
+                                    {source.label}
+                                  </a>
+                                ))}
+                              </div>
+                            </details>
+                          ) : null}
                         </div>
                       </div>
                     </div>
@@ -210,6 +235,7 @@ export default function QuizPage() {
   const letters = ["A", "B", "C", "D"];
   const userAns = answers[idx];
   const isLocked = userAns !== null;
+  const currentChoiceOrder = getChoiceOrder(idx);
   const progressPct = questions.length > 0 ? Math.round(((idx + 1) / questions.length) * 100) : 0;
 
   return (
@@ -258,11 +284,12 @@ export default function QuizPage() {
 
             {/* Choices */}
             <div className="space-y-2 mb-3">
-              {q?.choices.map((choice, i) => {
+              {q && currentChoiceOrder.map((originalChoiceIndex, i) => {
+                const choice = q.choices[originalChoiceIndex];
                 let choiceClass = "xp-choice";
                 let icon: React.ReactNode = null;
                 if (isLocked) {
-                  if (i === q.answer) {
+                  if (originalChoiceIndex === q.answer) {
                     choiceClass = "xp-choice xp-choice-correct";
                     icon = <CheckIcon className="w-4 h-4 text-[#006100]" />;
                   } else if (i === userAns) {
@@ -289,6 +316,18 @@ export default function QuizPage() {
                 <div>
                   <p className="text-[10px] font-bold text-[#003c74] mb-0.5">Explanation</p>
                   <p className="text-[11px] text-[#000] leading-relaxed">{q.explanation}</p>
+                  {topicNotes?.sources.length ? (
+                    <details className="quiz-source-details mt-2">
+                      <summary>Topic sources</summary>
+                      <div className="quiz-source-list">
+                        {topicNotes.sources.map((source) => (
+                          <a key={source.url} href={source.url} target="_blank" rel="noreferrer" className="quiz-source-link">
+                            {source.label}
+                          </a>
+                        ))}
+                      </div>
+                    </details>
+                  ) : null}
                 </div>
               </div>
             )}
@@ -306,7 +345,7 @@ export default function QuizPage() {
 
           {/* Status Bar */}
           <div className="xp-statusbar">
-            <span>{isLocked ? (userAns === q?.answer ? "Correct!" : "Incorrect") : "Select an answer"}</span>
+            <span>{isLocked ? (isAnswerCorrect(idx, userAns) ? "Correct!" : "Incorrect") : "Select an answer"}</span>
             <span className="ml-auto">Score: {correct}/{answered}</span>
           </div>
         </div>
