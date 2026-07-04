@@ -24,6 +24,14 @@ app.get("/health", (_req, res) => {
   res.json({ ok: true, problems: Object.keys(problems).length });
 });
 
+app.get("/", (_req, res) => {
+  res.json({
+    ok: true,
+    service: "java-runner-api",
+    routes: ["/health", "/problems", "/run"],
+  });
+});
+
 app.get("/problems", (_req, res) => {
   res.json({
     ok: true,
@@ -83,6 +91,15 @@ app.post("/run", async (req, res) => {
   } finally {
     await fs.rm(workDir, { recursive: true, force: true });
   }
+});
+
+app.use((req, res) => {
+  res.status(404).json({
+    ok: false,
+    error: "Route not found.",
+    path: req.path,
+    routes: ["/", "/health", "/problems", "/run"],
+  });
 });
 
 function validateCode(code) {
