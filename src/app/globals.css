@@ -916,6 +916,51 @@ html {
   color: #0054e3;
 }
 
+.java-oop-strip {
+  display: grid;
+  grid-template-columns: 180px minmax(0, 1fr);
+  align-items: stretch;
+  border: 1px solid #7f9db9;
+  background: #f7fbff;
+}
+
+.java-oop-title {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  padding: 9px 10px;
+  border-right: 1px solid #7f9db9;
+  background: #e8f4fd;
+  color: #003c74;
+  font-size: 11px;
+  font-weight: bold;
+}
+
+.java-oop-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  align-items: center;
+  padding: 8px;
+}
+
+.java-oop-link {
+  border: 1px solid #7f9db9;
+  border-radius: 3px;
+  background: #ffffff;
+  color: #003c74;
+  padding: 5px 8px;
+  font-family: inherit;
+  font-size: 11px;
+  cursor: pointer;
+}
+
+.java-oop-link:hover {
+  border-color: #0054e3;
+  background: #316ac5;
+  color: #ffffff;
+}
+
 .java-section {
   display: grid;
   gap: 12px;
@@ -1521,6 +1566,20 @@ html {
     width: 100%;
     margin-left: 0;
     text-align: center;
+  }
+
+  .java-oop-strip {
+    grid-template-columns: 1fr;
+  }
+
+  .java-oop-title {
+    border-right: 0;
+    border-bottom: 1px solid #7f9db9;
+  }
+
+  .java-oop-link {
+    flex: 1 1 140px;
+    min-height: 34px;
   }
 
   .java-cheatsheet-layout {

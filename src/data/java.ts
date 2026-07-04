@@ -70,6 +70,7 @@ export const javaSources: JavaSource[] = [
   { label: "Oracle Java Tutorials", url: "https://docs.oracle.com/javase/tutorial/" },
   { label: "Oracle Java SE 21 API", url: "https://docs.oracle.com/en/java/javase/21/docs/api/index.html" },
   { label: "OpenJDK", url: "https://openjdk.org/" },
+  { label: "Princeton IntroCS Java Programming Cheatsheet", url: "https://introcs.cs.princeton.edu/java/11cheatsheet/" },
   { label: "w3resource Java Exercises", url: "https://www.w3resource.com/java-exercises/" },
   { label: "MIT OpenCourseWare Introduction to Computer Science and Programming in Java", url: "https://ocw.mit.edu/courses/6-092-introduction-to-programming-in-java-january-iap-2010/" },
 ];
@@ -184,6 +185,8 @@ export const javaCheatTopics: JavaCheatTopic[] = [
       row("Object", "Instance of a class with its own state.", "Real instance", "Use new to create most objects."),
       row("Field", "Variable stored in an object or class.", "Object data", "Local variables live inside methods."),
       row("Method", "Behavior defined by a class.", "Object action", "Static methods belong to the class, not an instance."),
+      row("Instance variable", "Field that belongs to each object instance.", "Per-object state", "Each object can hold different values for its instance variables."),
+      row("Instance method", "Method called on an object that can access that object's fields.", "Object behavior", "Needs an object unless called from inside the same object."),
     ],
   },
   {
@@ -193,9 +196,11 @@ export const javaCheatTopics: JavaCheatTopic[] = [
     summary: "Object initialization, this, access control, getters, setters, and invariants.",
     rows: [
       row("Constructor", "Special member used to initialize new objects.", "Build object", "No return type, not even void."),
+      row("No-argument constructor", "Constructor with no parameters.", "new ClassName()", "Java only supplies a default no-argument constructor if no constructor is declared."),
       row("this", "Reference to the current object.", "Current object", "Useful when parameter and field names match."),
       row("private", "Access modifier limiting use to the same class.", "Hide details", "Use methods to expose controlled access."),
       row("Getter/Setter", "Methods for reading or changing private fields.", "Controlled access", "Setters should validate when needed."),
+      row("Encapsulation", "Keeping data and the rules for changing it inside the class.", "Protect state", "Public fields make it easy to bypass validation."),
     ],
   },
   {
