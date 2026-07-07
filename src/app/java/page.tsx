@@ -160,7 +160,7 @@ export default function JavaReviewerPage() {
 
   return (
     <div className="xp-desktop">
-      <div className="flex-1 flex items-start justify-center p-2 sm:p-4 md:p-8">
+      <div className="app-shell">
         <div className="xp-window java-window w-full max-w-6xl">
           <div className="xp-titlebar">
             <CodeIcon className="xp-titlebar-icon text-white" />

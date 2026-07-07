@@ -18,7 +18,7 @@ export default function NotesPage() {
   if (!topic || !notes) {
     return (
       <div className="xp-desktop">
-        <div className="flex-1 flex items-start sm:items-center justify-center p-2 sm:p-4 pb-14">
+        <div className="app-shell">
           <div className="xp-window w-80">
             <div className="xp-titlebar">
               <BookIcon className="xp-titlebar-icon text-white" />
@@ -42,7 +42,7 @@ export default function NotesPage() {
 
   return (
     <div className="xp-desktop">
-      <div className="flex-1 flex items-start justify-center p-2 sm:p-4 pb-14 overflow-auto">
+      <div className="app-shell">
         <div className="xp-window w-full max-w-4xl">
           <div className="xp-titlebar">
             <IconComponent className="xp-titlebar-icon text-white" />
