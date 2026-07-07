@@ -41,7 +41,7 @@ export default function Home() {
   return (
     <div className="xp-desktop">
       {/* Main content area */}
-      <div className="flex-1 flex items-start sm:items-center justify-center p-2 sm:p-4 md:p-8">
+      <div className="app-shell">
         <div className="xp-window w-full max-w-3xl">
           {/* Title Bar */}
           <div className="xp-titlebar">
@@ -153,7 +153,7 @@ export default function Home() {
 
             {/* Topic ListView */}
             <div className="xp-listview mb-4">
-              <div className="xp-listview-header xp-topic-header" style={{ gridTemplateColumns: "40px 1fr 65px 80px 105px 105px" }}>
+              <div className="xp-listview-header xp-topic-header">
                 <div>#</div>
                 <div>Topic</div>
                 <div>Items</div>
@@ -173,7 +173,6 @@ export default function Home() {
                   <div
                     key={topic.id}
                     className="xp-listview-row xp-topic-row"
-                    style={{ gridTemplateColumns: "40px 1fr 65px 80px 105px 105px" }}
                     onClick={() => handleTopicTap(topic.id)}
                   >
                     <div className="xp-topic-number text-[12px]">{i + 1}</div>

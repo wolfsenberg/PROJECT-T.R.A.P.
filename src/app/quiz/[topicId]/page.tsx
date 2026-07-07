@@ -80,7 +80,7 @@ export default function QuizPage() {
   if (!topic) {
     return (
       <div className="xp-desktop">
-        <div className="flex-1 flex items-start sm:items-center justify-center p-2 sm:p-4 pb-14">
+        <div className="app-shell">
           <div className="xp-window w-80">
             <div className="xp-titlebar">
               <span className="xp-titlebar-text">Error</span>
@@ -104,7 +104,7 @@ export default function QuizPage() {
     const passed = pct >= 75;
     return (
       <div className="xp-desktop">
-        <div className="flex-1 flex items-start sm:items-center justify-center p-2 sm:p-4 pb-14">
+        <div className="app-shell">
           <div className="xp-window w-full max-w-lg">
             <div className="xp-titlebar">
               <svg className="xp-titlebar-icon text-white" viewBox="0 0 16 16" fill="currentColor"><path d="M2 2h12v12H2V2zm1 2v8h10V4H3zm1 1h8v1H4V5zm0 2h8v1H4V7zm0 2h5v1H4V9z"/></svg>
@@ -156,7 +156,7 @@ export default function QuizPage() {
     const letters = ["A", "B", "C", "D"];
     return (
       <div className="xp-desktop">
-        <div className="flex-1 flex items-start justify-center p-2 sm:p-4 pb-14 overflow-auto">
+        <div className="app-shell">
           <div className="xp-window w-full max-w-2xl">
             <div className="xp-titlebar">
               <svg className="xp-titlebar-icon text-white" viewBox="0 0 16 16" fill="currentColor"><path d="M2 2h12v12H2V2zm1 2v8h10V4H3zm1 1h8v1H4V5zm0 2h8v1H4V7zm0 2h5v1H4V9z"/></svg>
@@ -240,7 +240,7 @@ export default function QuizPage() {
 
   return (
     <div className="xp-desktop">
-      <div className="flex-1 flex items-start sm:items-center justify-center p-2 sm:p-4 pb-14">
+      <div className="app-shell">
         <div className="xp-window w-full max-w-2xl">
           <div className="xp-titlebar">
             <svg className="xp-titlebar-icon text-white" viewBox="0 0 16 16" fill="currentColor"><path d="M2 2h12v12H2V2zm1 2v8h10V4H3zm1 1h8v1H4V5zm0 2h8v1H4V7zm0 2h5v1H4V9z"/></svg>

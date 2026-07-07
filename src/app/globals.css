@@ -9,7 +9,7 @@
     box-sizing: border-box;
   }
 
-  body {
+body {
     font-family: "Tahoma", "Segoe UI", sans-serif;
     font-size: 11px;
     margin: 0;
@@ -55,6 +55,33 @@ html {
   background: #245edc;
 }
 
+.app-shell {
+  flex: 1;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  padding: 8px;
+}
+
+@media (min-width: 640px) {
+  .app-shell {
+    padding: 16px;
+  }
+}
+
+@media (min-width: 768px) {
+  .app-shell {
+    padding: 28px;
+  }
+}
+
+@media (min-width: 1024px) {
+  .app-shell {
+    align-items: center;
+    padding: 32px;
+  }
+}
+
 /* === XP DESKTOP === */
 .xp-desktop {
   min-height: 100vh;
@@ -66,33 +93,39 @@ html {
   padding-bottom: calc(36px + env(safe-area-inset-bottom));
 }
 
-@media (max-width: 560px) {
+@media (max-width: 760px) {
   .xp-desktop {
-    padding-bottom: calc(40px + env(safe-area-inset-bottom));
+    padding-bottom: calc(48px + env(safe-area-inset-bottom));
+  }
+
+  .app-shell {
+    align-items: flex-start;
+    padding: 10px;
   }
 
   .xp-window {
-    border-radius: 0;
+    border-radius: 8px 8px 4px 4px;
     box-shadow: 0 2px 8px rgba(0,0,0,0.3);
     width: 100%;
+    max-width: 100%;
   }
 
   .xp-titlebar {
-    border-radius: 0;
-    min-height: 36px;
+    min-height: 42px;
+    padding: 8px;
   }
 
   .xp-titlebar-text {
-    font-size: 12px;
+    font-size: 15px;
   }
 
   .xp-titlebar-btn {
-    width: 24px;
-    height: 24px;
+    width: 30px;
+    height: 30px;
   }
 
   .xp-body {
-    padding: 12px;
+    padding: 14px;
   }
 }
 
@@ -197,7 +230,7 @@ html {
   gap: 8px;
 }
 
-@media (max-width: 560px) {
+@media (max-width: 760px) {
   .xp-toolbar {
     align-items: stretch;
     gap: 6px;
@@ -256,7 +289,7 @@ html {
   border-color: #0050d0;
 }
 
-@media (max-width: 560px) {
+@media (max-width: 760px) {
   .xp-button,
   .xp-button-primary {
     min-height: 40px;
@@ -342,23 +375,33 @@ html {
   display: block;
 }
 
-/* Mobile: stack topic list as cards */
-@media (max-width: 560px) {
+.xp-topic-header,
+.xp-topic-row {
+  grid-template-columns: 40px 1fr 65px 80px 105px 105px;
+}
+
+/* Tablet/mobile: stack topic list as comfortable cards */
+@media (max-width: 820px) {
   .xp-listview {
     overflow-x: visible;
     border: 0;
     background: transparent;
     display: grid;
-    gap: 10px;
+    gap: 12px;
   }
 
   .xp-listview-header { display: none; }
 
-  .xp-listview-row {
+  .xp-topic-row {
     display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 8px;
-    padding: 10px;
+    grid-template-columns: 34px minmax(0, 1fr) auto;
+    grid-template-areas:
+      "number name status"
+      "items name status"
+      "notes notes exam";
+    column-gap: 10px;
+    row-gap: 10px;
+    padding: 12px;
     min-width: 0;
     border: 1px solid #7f9db9;
     border-radius: 4px;
@@ -368,16 +411,35 @@ html {
 
   .xp-listview-row > div {
     padding: 0;
+    overflow: visible;
   }
 
-  .xp-topic-number,
+  .xp-topic-number {
+    grid-area: number;
+    width: 28px;
+    height: 28px;
+    justify-content: center;
+    align-self: start;
+    border: 1px solid #7f9db9;
+    background: #e8f4fd;
+    color: #003c74;
+    font-weight: bold;
+  }
+
   .xp-topic-items {
-    display: none;
+    grid-area: items;
+    width: 28px;
+    min-height: 20px;
+    justify-content: center;
+    align-self: start;
+    border: 1px solid #d6e8f5;
+    background: #f7fbff;
+    color: #444444;
+    font-size: 10px;
   }
 
   .xp-topic-name {
-    grid-column: 1 / 2;
-    grid-row: 1;
+    grid-area: name;
     min-width: 0;
     align-items: flex-start !important;
   }
@@ -388,7 +450,7 @@ html {
 
   .xp-topic-copy {
     display: grid;
-    gap: 2px;
+    gap: 4px;
     min-width: 0;
   }
 
@@ -398,37 +460,39 @@ html {
     overflow: visible;
     text-overflow: clip;
     line-height: 1.25;
+    font-size: 13px;
   }
 
   .xp-topic-description {
     display: block;
     color: #444444;
-    font-size: 10px;
-    line-height: 1.35;
+    font-size: 11px;
+    line-height: 1.4;
     overflow-wrap: anywhere;
   }
 
   .xp-topic-status {
-    grid-column: 2 / 3;
-    grid-row: 1;
+    grid-area: status;
     align-self: start;
     justify-self: end;
-    min-width: 58px;
+    min-width: 76px;
     justify-content: flex-end;
+    border: 1px solid #d6e8f5;
+    background: #fafafa;
+    padding: 5px 7px !important;
   }
 
   .xp-topic-action {
-    grid-row: 2;
     width: 100%;
     min-width: 0;
   }
 
   .xp-topic-action:nth-last-child(2) {
-    grid-column: 1 / 2;
+    grid-area: notes;
   }
 
   .xp-topic-action:last-child {
-    grid-column: 2 / 3;
+    grid-area: exam;
   }
 
   .xp-topic-action a,
@@ -439,10 +503,27 @@ html {
     display: flex;
     align-items: center;
     justify-content: center;
+    gap: 6px;
   }
 
   .xp-listview-row:hover {
     background: #ffffff;
+  }
+}
+
+@media (max-width: 480px) {
+  .xp-topic-row {
+    grid-template-columns: 32px minmax(0, 1fr);
+    grid-template-areas:
+      "number name"
+      "items status"
+      "notes exam";
+  }
+
+  .xp-topic-status {
+    justify-self: stretch;
+    justify-content: flex-start;
+    min-width: 0;
   }
 }
 
@@ -768,9 +849,9 @@ html {
   box-shadow: 0 -1px 4px rgba(0, 0, 0, 0.3);
 }
 
-@media (max-width: 560px) {
+@media (max-width: 760px) {
   .xp-taskbar {
-    height: calc(40px + env(safe-area-inset-bottom));
+    height: calc(44px + env(safe-area-inset-bottom));
     padding: 4px 4px calc(4px + env(safe-area-inset-bottom));
   }
 }
@@ -792,9 +873,9 @@ html {
   text-shadow: 0 1px 1px rgba(0, 0, 0, 0.4);
 }
 
-@media (max-width: 560px) {
+@media (max-width: 760px) {
   .xp-start-button {
-    height: 32px;
+    height: 34px;
     padding: 2px 10px 2px 6px;
   }
 
@@ -1454,7 +1535,7 @@ html {
   color: #808080 !important;
 }
 
-@media (max-width: 560px) {
+@media (max-width: 760px) {
   .xp-choice {
     min-height: 56px;
     padding: 12px;
@@ -1535,7 +1616,7 @@ html {
   .xp-start-menu {
     left: 6px;
     right: 6px;
-    bottom: calc(40px + env(safe-area-inset-bottom));
+    bottom: calc(44px + env(safe-area-inset-bottom));
     width: auto !important;
   }
 
